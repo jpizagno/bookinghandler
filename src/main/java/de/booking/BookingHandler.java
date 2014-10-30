@@ -1,5 +1,13 @@
 package de.booking;
 
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -15,14 +23,14 @@ import de.booking.service.BookingService;
  * 
  * 
  */
-public class BookingHandler {
+public class BookingHandler extends JFrame  {
 	
 	private static ConfigurableApplicationContext context;
 	
 	public static void main (String[] args) {
 		BookingHandler myApp = new BookingHandler();
 		myApp.setup();
-		myBookingHandler.go();
+		myApp.go();
 		myApp.shutdown();
 	}
 	
