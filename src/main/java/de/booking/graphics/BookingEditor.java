@@ -24,7 +24,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import de.booking.database.DatabaseHandler;
-import BookingModel.Booking;
+import de.booking.model.Booking;
 
 public class BookingEditor extends JPanel  {
 	 private String newline = "\n";

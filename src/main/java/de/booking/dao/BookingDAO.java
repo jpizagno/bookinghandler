@@ -11,5 +11,7 @@ public interface BookingDAO {
 	  void updateBooking(Booking myBooking);
 	  
 	  void deleteBooking(Booking myBooking);
+	  
+	  void insertNewBookingCalcTotal(Booking myBooking);
 
 }

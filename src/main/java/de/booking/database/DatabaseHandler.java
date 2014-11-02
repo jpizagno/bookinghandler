@@ -10,8 +10,8 @@ import java.util.Hashtable;
 
 import javax.swing.JOptionPane;
 
+import de.booking.model.Booking;
 import de.booking.toolbox.OSDetector;
-import BookingModel.Booking;
 
 public class DatabaseHandler {
 	private Connection conn = null;
@@ -112,26 +112,7 @@ public class DatabaseHandler {
 				String st="something wrong with query_all = "+query_all;
 				JOptionPane.showMessageDialog(null,st);
 			}
-			
-		/*	query_all =  " SELECT *";
-			query_all = query_all + " INTO OUTFILE '"+outfile+".total.csv'";
-			query_all = query_all + " FIELDS TERMINATED BY ',' ";
-			query_all = query_all + " ENCLOSED BY '\"' ";
-			query_all = query_all + " LINES TERMINATED BY '\\n'";
-			query_all = query_all + " FROM total ; ";
-			try {
-				Statement stmt = conn.createStatement();
-				stmt.execute(query_all);
-				stmt.close();
-			} catch (SQLException e) {
-				System.out.println("****** could not create a statement");
-				System.out.println("DatabaseHandler.exportOUTFILEonStartUp():");
-				e.printStackTrace();
-				System.out.println("query_all 2 = ");
-				System.out.println(query_all);
-			}
-		*/
-			
+						
 			query_all =  " SELECT *";
 			query_all = query_all + " INTO OUTFILE '"+outfile+".percentages.csv'";
 			query_all = query_all + " FIELDS TERMINATED BY ',' ";
@@ -454,28 +435,5 @@ public class DatabaseHandler {
 			""+kreuzfahrt_percent_default+"" +
 					","+flug_percent_default+"," +
 					""+hotel_percent_default+","+versicherung_percent_default+");";
-	/* not used (10 May):  public static String create_total_table = "CREATE TABLE total (booking_number int(11), 
-	 * total float(8,4) PRIMARY KEY (booking_number) );";
-	 */
-	/* not used:  public static String total_booking_trigger = "use bookings; "+
-						"delimiter $$"+
-						"CREATE TRIGGER total_trig AFTER insert on booking"+
-						"FOR EACH ROW"+
-						"BEGIN"+
-						"DECLARE kp FLOAT;"+
-						"DECLARE fp FLOAT;"+
-						"DECLARE hp FLOAT;"+
-						"DECLARE vp FLOAT;"+
-						"DECLARE k FLOAT;"+
-						"DECLARE f FLOAT;"+
-						"DECLARE h FLOAT;"+
-						"DECLARE v FLOAT;"+
-						"DECLARE mybooking_number INT;"+
-						"SELECT kreuzfahrt_percent,flug_percent,hotel_percent,versicherung_percent INTO kp,fp,hp,vp FROM percentages;"+
-						"SET @mytotal = NEW.kreuzfahrt*kp + NEW.flug*fp + NEW.hotel*hp + NEW.versicherung*vp;"+
-						"INSERT into total (total,booking_number) values (@mytotal,NEW.booking_number);"+
-						"END$$"+
-						"delimiter ; ";
-						*/
 	
 }
