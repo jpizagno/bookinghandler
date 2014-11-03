@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import de.booking.model.Booking;
+import de.booking.model.Percentages;
 
 @Repository("bookingDAO")
 public class BookingDAOImpl implements BookingDAO {
@@ -37,14 +38,15 @@ public class BookingDAOImpl implements BookingDAO {
 	 */
 	public void insertNewBookingCalcTotal(Booking booking2Insert) {
 		// get percentages
-		Hashtable<String, Float> percentages_hashtable = getPercentages();
+		Percentages currentPercentages = (Percentages) sessionFactory.getCurrentSession().get(Percentages.class, 1);
 		
 		// get total for this booking:
-		float total = percentages_hashtable.get(kreuzfahrt_percent_column) * booking2Insert.getkreuzfahrt();
-		total = total + percentages_hashtable.get(this.flug_percent_column) * booking2Insert.getflug();
-		total = total + percentages_hashtable.get(this.hotel_percent_column) * booking2Insert.gethotel();
-		total = total + percentages_hashtable.get(this.versicherung_percent_column) * booking2Insert.getversicherung();
+		float total = currentPercentages.getKreuzfahrt_percent() * booking2Insert.getKreuzfaht();
+		total += currentPercentages.getFlug_percent() * booking2Insert.getFlug();
+		total += currentPercentages.getHotel_percent() * booking2Insert.getHotel();
+		total += currentPercentages.getVersicherung_percent() * booking2Insert.getVersicherung() ;
 		
+		booking2Insert.setTotal(total);
 		
 		sessionFactory.getCurrentSession().persist(booking2Insert);
 		
