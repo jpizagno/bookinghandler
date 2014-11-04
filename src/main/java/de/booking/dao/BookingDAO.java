@@ -1,5 +1,7 @@
 package de.booking.dao;
 
+import java.util.List;
+
 import de.booking.model.Booking;
 
 public interface BookingDAO {
@@ -13,5 +15,7 @@ public interface BookingDAO {
 	  void deleteBooking(Booking myBooking);
 	  
 	  void insertNewBookingCalcTotal(Booking myBooking);
+	  
+	  List<Booking> getTopNRows(int numRows);
 
 }

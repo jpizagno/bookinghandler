@@ -239,6 +239,7 @@ public class DatabaseHandler {
 		}	
 	}
 	
+	/*
 	// insert a booking
 	public void insertNewBooking(Booking booking2Insert) {
 		// insert this booking into the database
@@ -287,7 +288,9 @@ public class DatabaseHandler {
 			System.out.println("DB not connected");
 		}		
 	}
+	*/
 
+	/*
 	public ResultSet getTopRows(int limitRows) {
 		ResultSet rset = null;
 		if (connected) {
@@ -307,6 +310,7 @@ public class DatabaseHandler {
 		}
 		 return rset;
 	}
+	*/
 	
 	// get percentages
 	public Hashtable<String,Float> getPercentages() {

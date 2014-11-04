@@ -1,7 +1,12 @@
 package de.booking.dao;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,7 +38,7 @@ public class BookingDAOImpl implements BookingDAO {
 	}
 
 	/**
-	 * calculates total and then persists object
+	 * calculates total and then persists Booking booking2Insert
 	 * 
 	 */
 	public void insertNewBookingCalcTotal(Booking booking2Insert) {
@@ -50,6 +55,22 @@ public class BookingDAOImpl implements BookingDAO {
 		
 		sessionFactory.getCurrentSession().persist(booking2Insert);
 		
+	}
+
+	/**
+	 * Fetches the most recent <code>numRows<code> of Booking table.
+	 * Recent is determined by updated_time.
+	 * 
+	 * @return List<Booking>
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Booking> getTopNRows(int numRows) { 
+		Session session = sessionFactory.getCurrentSession();  
+		session.beginTransaction();  
+		String sSQL  = " FROM booking order by updated_time desc LIMIT 0,";
+		sSQL = sSQL + numRows ;
+		Query queryResult = session.createQuery(sSQL);  
+		return queryResult.list(); 
 	}
 
 }

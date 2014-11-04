@@ -23,6 +23,7 @@
      <property name="annotatedClasses">
             <list>
                 <value>de.booking.model.Booking</value>
+                <value>de.booking.model.Percentages</value>
             </list>
         </property>
     <property name="hibernateProperties">
