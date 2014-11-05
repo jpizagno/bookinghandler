@@ -12,6 +12,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import de.booking.dao.BookingDAO;
+import de.booking.graphics.BookingEditor;
+import de.booking.graphics.HistoryBookings;
 import de.booking.model.Booking;
 import de.booking.service.BookingService;
 
