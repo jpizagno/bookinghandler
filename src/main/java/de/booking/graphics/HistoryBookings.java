@@ -1,12 +1,21 @@
 package de.booking.graphics;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.springframework.context.ConfigurableApplicationContext;
+
 import de.booking.model.Booking;
+import de.booking.model.Percentages;
+import de.booking.service.BookingService;
+import de.booking.service.PercentagesService;
 import de.booking.toolbox.DataIngest;
-import toolbox.JtablePdf;
-import toolbox.OSDetector;
+import de.booking.toolbox.JTablePdf;
+import de.booking.toolbox.OSDetector;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
@@ -18,7 +27,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-//import java.awt.event.*;        //for action events
+import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Enumeration;
@@ -26,7 +35,8 @@ import java.util.Hashtable;
 
 public class HistoryBookings extends JPanel {
 
-	private DatabaseHandler myDB;
+	private static ConfigurableApplicationContext context;
+	
 	private JTable bookingtable;
 	private JTextField myTotalAllBookings ;
 	private JTextField ehoiTotalAllBookings ;
@@ -36,26 +46,30 @@ public class HistoryBookings extends JPanel {
 	private Button deleteBooking;
 	private Float totalEhoiMonth;
 
-    public HistoryBookings(DatabaseHandler myDBcopy) {
-		// connect to DB
-		myDB = myDBcopy;
-		if (myDB.isConnected()==false){
-			String st="HistoryBookings NOT connected to Database";
-			JOptionPane.showMessageDialog(null,st);
-		}
-    	
+    public HistoryBookings() {
+
     	// across top:  current percentages
-		Hashtable<String,Float> percentages = myDB.getPercentages();
-		Enumeration<String> keys = percentages.keys();
-		JLabel[] columns = new JLabel[percentages.size()];
-		JLabel[] values = new JLabel[percentages.size()];
+    	PercentagesService percentagesService = (PercentagesService) context.getBean("percentagesService");
+        
+		//Hashtable<String,Float> percentages = myDB.getPercentages();
+		Percentages percentages = percentagesService.readPercentages(1);
+		
+		//Enumeration<String> keys = percentages.keys();
+		JLabel[] columns = new JLabel[percentages.getClass().getDeclaredFields().length-1];
+		JLabel[] values = new JLabel[percentages.getClass().getDeclaredFields().length-1];
+		
 		int i=0;
-		while(keys.hasMoreElements()){
-			String column_key = keys.nextElement();
-			columns[i] = new JLabel(column_key+" : ");
-			values[i] = new JLabel(percentages.get(column_key).toString());
-			i++;
+		for (Field field : percentages.getClass().getDeclaredFields()) {
+		    field.setAccessible(true); // You might want to set modifier to public first.
+		    Object value = field.get(percentages); 
+		    if (value != null) {
+		        System.out.println(field.getName() + "=" + value);      
+		        columns[i] = new JLabel(field.getName());
+				values[i] = new JLabel(value.toString());
+		        i++;
+		    }
 		}
+		
 		 //Lay out the text controls and the labels.
 		JPanel percentages_panel = new JPanel();
         GridBagLayout gridbag = new GridBagLayout();

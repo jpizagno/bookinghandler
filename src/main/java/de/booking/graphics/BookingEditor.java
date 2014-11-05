@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 
 import de.booking.database.DatabaseHandler;
 import de.booking.model.Booking;
+import de.booking.service.BookingService;
 
 public class BookingEditor extends JPanel  {
 	 private String newline = "\n";
@@ -42,9 +43,9 @@ public class BookingEditor extends JPanel  {
 	   private Button clearFields; // clears text fields
 	   private Button unstornoBooking;
 	   
-	public BookingEditor(DatabaseHandler myDBcopy) {
+	public BookingEditor() {
 		// connect to DB
-		myDB = myDBcopy;
+		myDB = bookingService;
 		if (myDB.isConnected()==false){
 			String st="BookingEditor NOT connected to Database";
 			JOptionPane.showMessageDialog(null,st);

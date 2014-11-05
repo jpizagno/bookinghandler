@@ -11,6 +11,9 @@ import javax.swing.JTabbedPane;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.javacodegeeks.snippets.enterprise.model.Car;
+import com.javacodegeeks.snippets.enterprise.service.CarService;
+
 import de.booking.dao.BookingDAO;
 import de.booking.graphics.BookingEditor;
 import de.booking.graphics.HistoryBookings;
@@ -44,24 +47,9 @@ public class BookingHandler extends JFrame  {
         
         // Check to see if Database is up
         // if(DB up get old values and load)
-        myDB = new DatabaseHandler();
-        if(myDB.connect()) {
-                // save database to disk
-                myDB.exportOUTFILEonStartUp();
-                
-                // get defeaults
-                myDefaults = myDB.getDefaults();
-                String st="Connected to Database";
-                JOptionPane.showMessageDialog(null,st);
-                //String innodbStatus = myDB.getInnodbStatus();
-                //JOptionPane.showMessageDialog(null,innodbStatus);
-        } else {
-            myDefaults = "Could not connect to MySQL database.  Booking Handler" +
-                    " needs this to save data.";
-            JOptionPane.showMessageDialog(null,myDefaults);
-        }
-
-
+        //myDB = new DatabaseHandler();
+        BookingService bookingService = (BookingService) context.getBean("bookingService");
+        
 
 		// Create Swing components
 		// create editors
@@ -73,8 +61,8 @@ public class BookingHandler extends JFrame  {
 		setLayout(new FlowLayout());
 
 		//JPanel workBookings = new JPanel();
-		BookingEditor workBookings = new BookingEditor(myDB);
-		HistoryBookings viewBookings = new HistoryBookings(myDB);
+		BookingEditor workBookings = new BookingEditor();
+		HistoryBookings viewBookings = new HistoryBookings();
 		
 		JTabbedPane tabs = new JTabbedPane();
 		
