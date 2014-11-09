@@ -312,6 +312,7 @@ public class DatabaseHandler {
 	}
 	*/
 	
+	/*
 	// get percentages
 	public Hashtable<String,Float> getPercentages() {
 		Hashtable<String,Float> percentages = new Hashtable<String,Float>();
@@ -333,7 +334,9 @@ public class DatabaseHandler {
 		}
 		return percentages;
 	}
+	*/
 	
+	/*
 	// select bookings by month/year
 	public ResultSet getBookingsByMonthYear(int month, int year) {
 		ResultSet rset = null;
@@ -359,8 +362,9 @@ public class DatabaseHandler {
 		}
 		 return rset;
 	}
+	*/
 
-	
+	/*
 	// select bookings by month/year
 	// OVERLOADED METHOD for getting bookings that have NOT been cancelled:
 	public ResultSet getBookingsByMonthYear(int month, int year, String notused) {
@@ -389,6 +393,7 @@ public class DatabaseHandler {
 		}
 		 return rset;
 	}
+	*/
 	
 	public ResultSet getBookingsEhoiByMonthYear(int month, int year, String notused) {
 		// if any STting is passed, then selects bookings with storno=0.

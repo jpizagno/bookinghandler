@@ -17,5 +17,7 @@ public interface BookingDAO {
 	  void insertNewBookingCalcTotal(Booking myBooking);
 	  
 	  List<Booking> getTopNRows(int numRows);
+	  
+	  List<Booking>  getBookingsByMonthYear(int month, int year, boolean getStorno);
 
 }

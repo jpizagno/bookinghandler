@@ -73,4 +73,26 @@ public class BookingDAOImpl implements BookingDAO {
 		return queryResult.list(); 
 	}
 
+	/**
+	 * Gets the bookings for a given 
+	 * 
+	 * @param   month <code>int</code> 
+	 * @param   year <code>int</code>
+	 * 
+     * @return  List of Booking objects
+	 * 
+	 */
+	public List<Booking> getBookingsByMonthYear(int month, int year, boolean getStorno) {
+		Session session = sessionFactory.getCurrentSession();  
+		session.beginTransaction();  
+		String sSQL  = " FROM booking as bb " +
+				" WHERE bb.month_departure="+String.valueOf(month)+"" +
+				" AND bb.year_departure="+String.valueOf(year)+" ";
+		if (getStorno) {
+			sSQL += " AND bb.storno=0 ";
+		}
+		Query queryResult = session.createQuery(sSQL);  
+		return queryResult.list(); 
+	}
+
 }

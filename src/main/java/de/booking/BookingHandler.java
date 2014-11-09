@@ -11,9 +11,6 @@ import javax.swing.JTabbedPane;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.javacodegeeks.snippets.enterprise.model.Car;
-import com.javacodegeeks.snippets.enterprise.service.CarService;
-
 import de.booking.dao.BookingDAO;
 import de.booking.graphics.BookingEditor;
 import de.booking.graphics.HistoryBookings;
