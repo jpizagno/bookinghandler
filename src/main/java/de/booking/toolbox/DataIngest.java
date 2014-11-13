@@ -6,13 +6,23 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
+
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import de.booking.database.DatabaseHandler;
 import de.booking.model.Booking;
+import de.booking.service.BookingService;
 
 public class DataIngest {
 	
+	
+	private static ConfigurableApplicationContext context;
+
 	public static void IngestCSV(String filename) {
+		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		
 		// This method takes the name of a comma separated variable file of previous bookings
 		//    and ingest this into the database. The file should be of the format:
 		// kreuzfahrt,flug,hotel,versicherung,total,day_departure,month_departure,year_departure,surname,first name,booking number ,date_booking,storno
@@ -38,25 +48,31 @@ public class DataIngest {
 					 } else {
 						 // make a booking from this line:
 						 Booking myBooking = new Booking();
-						 myBooking.setKreuzfahrt(strLine.split(",")[0]);
-						 myBooking.setFlug(strLine.split(",")[1]);
-						 myBooking.setHotel(strLine.split(",")[2]);
-						 myBooking.setVersicherung(strLine.split(",")[3]);
+						 myBooking.setKreuzfahrt(Float.valueOf( strLine.split(",")[0] ));
+						 myBooking.setFlug(Float.valueOf( strLine.split(",")[1]));
+						 myBooking.setHotel(Float.valueOf( strLine.split(",")[2]));
+						 myBooking.setVersicherung(Float.valueOf( strLine.split(",")[3]));
 						 // total set by trigger
-						 myBooking.setDayDeparture(strLine.split(",")[5]);
-						 myBooking.setMonthDeparture(strLine.split(",")[6]);
-						 myBooking.setYearDeparture(strLine.split(",")[7]);
+						 myBooking.setDay_departure(Integer.valueOf( strLine.split(",")[5]));
+						 myBooking.setMonth_departure(Integer.valueOf( strLine.split(",")[6]));
+						 myBooking.setYear_departure(Integer.valueOf( strLine.split(",")[7]));
 						 myBooking.setSurname(strLine.split(",")[8]);
-						 myBooking.setFirstName(strLine.split(",")[9]);
-						 myBooking.setBookingNumber(strLine.split(",")[10]);
-						 myBooking.setBookingDate(strLine.split(",")[11]);
+						 myBooking.setFirst_name(strLine.split(",")[9]);
+						 myBooking.setBooking_number(strLine.split(",")[10]);
+						 String[] ddmmyyyy = strLine.split(",")[11].split("/");
+							Date temp_booking_date = new Date(Integer.valueOf(ddmmyyyy[2]).intValue(),
+									Integer.valueOf(ddmmyyyy[1]).intValue(), 
+									Integer.valueOf(ddmmyyyy[0]).intValue());
+						 myBooking.setBooking_date(temp_booking_date);
 						 if (strLine.split(",").length==13) {
 							 // then have Storno:
-							 myBooking.setStorno("STORNO");
+							 myBooking.setStorno(1);
 						 }
 						 
 						 // insert bookikng into DB
-						 myDB.insertNewBooking(myBooking);
+						 //myDB.insertNewBooking(myBooking);
+						 BookingService bookingService = (BookingService) context.getBean("bookingService");
+						 bookingService.insertNewBookingCalcTotal(myBooking);
 					 } 
 				 }
 				 //Close the input stream

@@ -46,7 +46,7 @@ public class BookingDAOImpl implements BookingDAO {
 		Percentages currentPercentages = (Percentages) sessionFactory.getCurrentSession().get(Percentages.class, 1);
 		
 		// get total for this booking:
-		float total = currentPercentages.getKreuzfahrt_percent() * booking2Insert.getKreuzfaht();
+		float total = currentPercentages.getKreuzfahrt_percent() * booking2Insert.getKreuzfahrt();
 		total += currentPercentages.getFlug_percent() * booking2Insert.getFlug();
 		total += currentPercentages.getHotel_percent() * booking2Insert.getHotel();
 		total += currentPercentages.getVersicherung_percent() * booking2Insert.getVersicherung() ;

@@ -16,7 +16,7 @@ public class BookingTester {
 		myBooking.setBooking_number("delme");
 		myBooking.setFirst_name("james test");
 		myBooking.setSurname("delme");
-		myBooking.setKreuzfaht((float) 0.0);
+		myBooking.setKreuzfahrt((float) 0.0);
 
 		BookingService bookingService = (BookingService) context.getBean("bookingService");
 		bookingService.persistBooking(myBooking);

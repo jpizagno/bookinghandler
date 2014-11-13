@@ -7,15 +7,22 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import de.booking.model.Booking;
+import de.booking.service.BookingService;
 import de.booking.toolbox.OSDetector;
 
 public class DatabaseHandler {
 	private Connection conn = null;
 	private boolean connected = false;
+	
+	private static ConfigurableApplicationContext context;
 	
 	public boolean isConnected() {
 		return connected;
@@ -31,6 +38,8 @@ public class DatabaseHandler {
 	
 	// connect to MySQL database
 	public boolean connect() {
+		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		
 		try
         {
             String userName = "juliap";
@@ -144,39 +153,14 @@ public class DatabaseHandler {
 		myAnswer.append("my defaults");
 		return myAnswer.toString();
 	}
-
-	/* public String getInnodbStatus() {
-		// This must have been for testing. feel free to delete.
-		Statement stmt;
-		String status = "did not work";
-		try {
-			stmt = conn.createStatement();
-			String SQLstring = "show engine innodb status;";
-			ResultSet rset = stmt.executeQuery(SQLstring); 
-			status = "";
-			status += " test ";
-			
-			while (rset.next()) {
-				//status += rset.getString(1);
-				for (int column=1; column<rset.getMetaData().getColumnCount();column++) {
-					status += rset.getString(column);
-					System.out.println("*** rset.getString(column) = "+rset.getString(column));
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return status;
-	}
-	*/
 	
 	// storno a booking
-		public void UNstornoBooking(String booking_number) {
+	// storno :  cancel/storno=1  valid=0
+		public void UNstornoBooking(Booking bookingUnstorno) {
 			if (conn!=null){ // already connected
 				try {
 					Statement stmt = conn.createStatement();
-					String SQLstring = "UPDATE booking SET storno=0 WHERE booking_number="+booking_number+" ; ";
+					String SQLstring = "UPDATE booking SET storno=0 WHERE booking_number="+bookingUnstorno+" ; ";
 					System.out.println("DatabaseHandler.UNstornoBooking()  SQLstring:  ");
 					System.out.println(SQLstring);
 					stmt.execute(SQLstring);
@@ -239,184 +223,13 @@ public class DatabaseHandler {
 		}	
 	}
 	
-	/*
-	// insert a booking
-	public void insertNewBooking(Booking booking2Insert) {
-		// insert this booking into the database
-		if (conn!=null){ // already connected
-			try {
-				Statement stmt = conn.createStatement();
-				
-				// get percentages
-				Hashtable<String, Float> percentages_hashtable = getPercentages();
-				
-				// get total for this booking:
-				float total = percentages_hashtable.get(kreuzfahrt_percent_column) * booking2Insert.getkreuzfahrt();
-				total = total + percentages_hashtable.get(this.flug_percent_column) * booking2Insert.getflug();
-				total = total + percentages_hashtable.get(this.hotel_percent_column) * booking2Insert.gethotel();
-				total = total + percentages_hashtable.get(this.versicherung_percent_column) * booking2Insert.getversicherung();
-				
-				Date bookingdate = booking2Insert.getbookingdate();
-				String bookingdate_sql = ""+String.valueOf(bookingdate.getYear())+"-" +
-						""+String.valueOf(bookingdate.getMonth())+"-" +
-						""+String.valueOf(bookingdate.getDate())+"";
-				
-				String insertString = "INSERT INTO booking (kreuzfahrt,flug,hotel,total," +
-						"versicherung,day_departure,month_departure,year_departure," +
-						"surname,first_name,booking_number,booking_date,storno) " +
-						"VALUES ("+booking2Insert.getkreuzfahrt().toString()+"," +
-								""+booking2Insert.getflug().toString()+"," +
-								""+booking2Insert.gethotel().toString()+"," +
-								""+String.valueOf(total)+"," +
-								""+booking2Insert.getversicherung().toString()+"," +
-								""+booking2Insert.getdaydeparture().toString()+"," +
-								""+booking2Insert.getmonthdeparture().toString()+"," +
-								""+booking2Insert.getyeardeparture().toString()+"," +
-								"\'"+booking2Insert.getsurname().toString()+"\'," +
-								"\'"+booking2Insert.getfirstname().toString()+"\'," +
-								"\'"+booking2Insert.getbookingnumber().toString()+"\'," +
-								"\'"+bookingdate_sql+"\'," +
-								""+booking2Insert.getstorno().toString()+");";
-				System.out.println("Executing string = "+insertString);
-				stmt.executeUpdate(insertString);
-				stmt.close();
-			} catch (SQLException e) {
-				System.out.println("****** could not create a statement");
-				e.printStackTrace();
-			}
-		} else {
-			System.out.println("DB not connected");
-		}		
-	}
-	*/
-
-	/*
-	public ResultSet getTopRows(int limitRows) {
-		ResultSet rset = null;
-		if (connected) {
-			String[] myFields = Booking.returnFieldnames().split(":");
-			String sSQL  = "SELECT "+Booking.returnFieldnames().replace(":"," , ")+" FROM booking order by updated_time desc LIMIT 0,";
-			sSQL = sSQL + limitRows + " ;";
-			System.out.println("sSQL = "+sSQL);
-			Statement stmt;
-			try {
-				stmt = this.conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-				this.conn.setAutoCommit(true);
-				rset = stmt.executeQuery(sSQL);
-			} catch (SQLException e) {
-				System.out.println("DatabaseHandler.get5TopRows()");
-				e.printStackTrace();
-			}
-		}
-		 return rset;
-	}
-	*/
-	
-	/*
-	// get percentages
-	public Hashtable<String,Float> getPercentages() {
-		Hashtable<String,Float> percentages = new Hashtable<String,Float>();
-		Statement stmt;
-		ResultSet rset;
-		String sSQL  = "SELECT * from percentages;";
-		try {
-			stmt = this.conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			rset = stmt.executeQuery(sSQL); 
-			while (rset.next()) {
-				percentages.put(kreuzfahrt_percent_column, rset.getFloat(kreuzfahrt_percent_column)) ;
-				percentages.put(flug_percent_column, rset.getFloat(flug_percent_column)) ;
-				percentages.put(hotel_percent_column, rset.getFloat(hotel_percent_column)) ;
-				percentages.put(versicherung_percent_column, rset.getFloat(versicherung_percent_column)) ;
-			}
-		} catch (SQLException e) {
-			System.out.println("DatabaseHandler.getPercentages()");
-			e.printStackTrace();
-		}
-		return percentages;
-	}
-	*/
-	
-	/*
-	// select bookings by month/year
-	public ResultSet getBookingsByMonthYear(int month, int year) {
-		ResultSet rset = null;
-		if (connected) {
-			String[] myFields = Booking.returnFieldnames().split(":");
-			String selectClause = "";
-			for(int i=0;i<myFields.length;i++) {
-				selectClause += "bb."+myFields[i]+",";
-			}
-			selectClause = selectClause.substring(0, selectClause.length() - 1); // remove last comma
-			String sSQL  = "SELECT "+selectClause+"  FROM booking as bb " +
-					" WHERE bb.month_departure="+String.valueOf(month)+"" +
-					" AND bb.year_departure="+String.valueOf(year)+"  ;";
-			System.out.println("sSQL = "+sSQL);
-			Statement stmt;
-			try {
-				stmt = this.conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-				rset = stmt.executeQuery(sSQL);
-			} catch (SQLException e) {
-				System.out.println("DatabaseHandler.get5TopRows()");
-				e.printStackTrace();
-			}
-		}
-		 return rset;
-	}
-	*/
-
-	/*
-	// select bookings by month/year
-	// OVERLOADED METHOD for getting bookings that have NOT been cancelled:
-	public ResultSet getBookingsByMonthYear(int month, int year, String notused) {
-		// if any STting is passed, then selects bookings with storno=0.
-		ResultSet rset = null;
-		if (connected) {
-			String[] myFields = Booking.returnFieldnames().split(":");
-			String selectClause = "";
-			for(int i=0;i<myFields.length;i++) {
-				selectClause += "bb."+myFields[i]+",";
-			}
-			selectClause = selectClause.substring(0, selectClause.length() - 1); // remove last comma
-			String sSQL  = "SELECT "+selectClause+" FROM booking as bb " +
-					" WHERE bb.month_departure="+String.valueOf(month)+"" +
-					" AND bb.year_departure="+String.valueOf(year)+" " +
-							" AND bb.storno=0 ;";
-			System.out.println("sSQL = "+sSQL);
-			Statement stmt;
-			try {
-				stmt = this.conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-				rset = stmt.executeQuery(sSQL);
-			} catch (SQLException e) {
-				System.out.println("DatabaseHandler.etBookingsByMonthYear()");
-				e.printStackTrace();
-			}
-		}
-		 return rset;
-	}
-	*/
-	
-	public ResultSet getBookingsEhoiByMonthYear(int month, int year, String notused) {
+	public List<Booking> getBookingsEhoiByMonthYear(int month, int year) {
 		// if any STting is passed, then selects bookings with storno=0.
 		// returns the total for ehoi, which is kreuzfahrt
-		ResultSet rset = null;
-		if (connected) {
-			String[] myFields = Booking.returnFieldnames().split(":");
-			String selectClause = "SELECT kreuzfahrt,flug,hotel,versicherung ";
-			String sSQL  = selectClause+" FROM booking as bb " +
-					" WHERE bb.month_departure="+String.valueOf(month)+"" +
-					" AND bb.year_departure="+String.valueOf(year)+" " +
-							" AND bb.storno=0 ;";
-			System.out.println("sSQL = "+sSQL);
-			Statement stmt;
-			try {
-				stmt = this.conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-				rset = stmt.executeQuery(sSQL);
-			} catch (SQLException e) {
-				System.out.println("DatabaseHandler.getBookingsEhoiByMonthYear()");
-				e.printStackTrace();
-			}
-		}
-		 return rset;
+		
+		BookingService bookingService = (BookingService) context.getBean("bookingService");
+
+		return bookingService.getBookingsByMonthYear(month, year, false);
 	}
 
 	

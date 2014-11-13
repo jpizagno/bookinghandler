@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 @Entity
 @Table(name = "BOOKING")
@@ -62,7 +64,7 @@ public class Booking {
 
 	// current timestamp
 	@Column(name = "UPDATED_TIME")
-	private Date updated_timee;	
+	private Date updated_time;	
 
 	public long getId() {
 		return id;
@@ -70,10 +72,10 @@ public class Booking {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public float getKreuzfaht() {
+	public float getKreuzfahrt() {
 		return kreuzfahrt;
 	}
-	public void setKreuzfaht(float kreuzfaht) {
+	public void setKreuzfahrt(float kreuzfaht) {
 		this.kreuzfahrt = kreuzfaht;
 	}
 	public float getFlug() {
@@ -133,8 +135,8 @@ public class Booking {
 	public String getBooking_number() {
 		return booking_number;
 	}
-	public void setBooking_number(String booking_number) {
-		this.booking_number = booking_number;
+	public void setBooking_number(String integer) {
+		this.booking_number = integer;
 	}
 	public int getStorno() {
 		return storno;
@@ -155,13 +157,81 @@ public class Booking {
 		this.booking_date = booking_date;
 	}
 	public Date getUpdated_timee() {
-		return updated_timee;
+		return updated_time;
 	}
 	public void setUpdated_timee(Date updated_timee) {
-		this.updated_timee = updated_timee;
+		this.updated_time = updated_timee;
 	}
 	
 	
+	public int setAllUserFields(JLabel[] labels, JTextField[] textFields) {
+		int successful = 0;
+		// this method is called by BookingHandler when book me button is clicked.
+		for (int i = 0;i<labels.length;i++){
+			String myLabel = labels[i].getText();
+			String enteredText = textFields[i].getText();
+			myLabel = myLabel.replace(":", "");
+			myLabel = myLabel.replace("(dd/mm/yyyy)", "");
+			System.out.println("setAllUserFields myLabel = "+myLabel+" enteredText = "+enteredText);
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("kreuzfahrt")) {
+				successful += 0;
+				setKreuzfahrt(Float.valueOf(enteredText));
+			}
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("flug")) {
+				successful += 0;
+				setFlug(Float.valueOf(enteredText));
+			}
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("hotel")) {
+				successful += 0;
+				setHotel(Float.valueOf(enteredText));
+			}
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("versicherung")) {
+				successful += 0;
+				setVersicherung(Float.valueOf(enteredText));
+			}
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("versicherung")) {
+				successful += 0;
+				setVersicherung(Float.valueOf(enteredText));
+			}
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("day_departure")) {
+				successful += 0;
+				setDay_departure(Integer.valueOf(enteredText));
+			}
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("month_departure")) {
+				successful += 0;
+				setDay_departure(Integer.valueOf(enteredText));
+			}
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("year_departure")) {
+				successful += 0;
+				setDay_departure(Integer.valueOf(enteredText));
+			}
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("surname")) {
+				successful += 0;
+				setSurname(enteredText);
+			}
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("first_name")) {
+				successful += 0;
+				setFirst_name(enteredText);
+			}
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("booking_number")) {
+				successful += 0;
+				setBooking_number(enteredText );
+			}
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("booking_date")) {
+				successful += 0;
+				String[] ddmmyyyy = enteredText.split("/");
+				Date temp_booking_date = new Date(Integer.valueOf(ddmmyyyy[2]).intValue(),
+						Integer.valueOf(ddmmyyyy[1]).intValue(), 
+						Integer.valueOf(ddmmyyyy[0]).intValue());
+				setBooking_date(temp_booking_date);
+			}
+			if (myLabel.trim().toLowerCase().equalsIgnoreCase("storno")) {
+				successful += 0;
+				setStorno(Integer.valueOf(enteredText));
+			}
+		}
+		return successful;
+	}
 
 
 }
