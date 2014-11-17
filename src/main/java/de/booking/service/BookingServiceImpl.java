@@ -46,6 +46,7 @@ public class BookingServiceImpl implements BookingService {
 	 * calculates total and then persists Booking booking2Insert
 	 * 
 	 */
+	@Transactional
 	public void insertNewBookingCalcTotal(Booking booking2Insert) {
 		// get percentages
 				Percentages currentPercentages = (Percentages) sessionFactory.getCurrentSession().get(Percentages.class, 1);
@@ -67,10 +68,11 @@ public class BookingServiceImpl implements BookingService {
 	 * 
 	 * @return List<Booking>
 	 */
+	@SuppressWarnings("unchecked")
+	@Transactional
 	public List<Booking> getTopNRows(int numRows) {
 		Session session = sessionFactory.getCurrentSession();  
-		session.beginTransaction();  
-		String sSQL  = " FROM booking order by updated_time desc LIMIT 0,";
+		String sSQL  = " FROM Booking order by updated_time desc LIMIT 0,";
 		sSQL = sSQL + numRows ;
 		Query queryResult = session.createQuery(sSQL);  
 		return queryResult.list(); 
@@ -85,10 +87,11 @@ public class BookingServiceImpl implements BookingService {
      * @return  List of Booking objects
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
+	@Transactional
 	public List<Booking> getBookingsByMonthYear(int month, int year,
 			boolean getStorno) {
-		Session session = sessionFactory.getCurrentSession();  
-		session.beginTransaction();  
+		Session session = sessionFactory.getCurrentSession();    
 		String sSQL  = " FROM booking as bb " +
 				" WHERE bb.month_departure="+String.valueOf(month)+"" +
 				" AND bb.year_departure="+String.valueOf(year)+" ";

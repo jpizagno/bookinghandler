@@ -10,6 +10,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import de.booking.database.DatabaseHandler;
 import de.booking.model.Booking;
@@ -31,13 +32,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.List;
 
 public class HistoryBookings extends JPanel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private static ConfigurableApplicationContext context;
 
@@ -55,6 +57,7 @@ public class HistoryBookings extends JPanel {
 	public HistoryBookings() {
 
 		myDB = new DatabaseHandler();
+		context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
 		// across top:  current percentages
 		PercentagesService percentagesService = (PercentagesService) context.getBean("percentagesService");
@@ -63,8 +66,8 @@ public class HistoryBookings extends JPanel {
 		Percentages percentages = percentagesService.readPercentages(1);
 
 		//Enumeration<String> keys = percentages.keys();
-		JLabel[] columns = new JLabel[percentages.getClass().getDeclaredFields().length-1];
-		JLabel[] values = new JLabel[percentages.getClass().getDeclaredFields().length-1];
+		JLabel[] columns = new JLabel[percentages.getClass().getDeclaredFields().length];
+		JLabel[] values = new JLabel[percentages.getClass().getDeclaredFields().length];
 
 		int i=0;
 		for (Field field : percentages.getClass().getDeclaredFields()) {
@@ -209,6 +212,7 @@ public class HistoryBookings extends JPanel {
 		bookingtable.setModel(myBookingTableModel);	
 	}
 
+	@SuppressWarnings("unused")
 	private List<Booking> getContentsofBookingTableByMonthYear(int month, int year) {	
 		return myDB.getBookingsEhoiByMonthYear(month,year);
 	}

@@ -20,6 +20,7 @@ public class DataIngest {
 	
 	private static ConfigurableApplicationContext context;
 
+	@SuppressWarnings("deprecation")
 	public static void IngestCSV(String filename) {
 		context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		

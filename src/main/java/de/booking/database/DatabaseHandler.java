@@ -2,11 +2,9 @@ package de.booking.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -33,6 +31,7 @@ public class DatabaseHandler {
 	}
 
 	public DatabaseHandler() {
+		context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		connect();
 	}
 	
@@ -248,10 +247,6 @@ public class DatabaseHandler {
 	private static Float flug_percent_default = 0.015f;
 	private static Float hotel_percent_default = 0.015f;
 	private static Float versicherung_percent_default = 0.05f;
-	private static String kreuzfahrt_percent_column = "kreuzfahrt_percent" ;
-	private static String flug_percent_column = "flug_percent" ;
-	private static String hotel_percent_column = "hotel_percent" ;
-	private static String versicherung_percent_column = "versicherung_percent" ;
 	public static String insert_default_percetages = "insert into percentages (kreuzfahrt_percent," +
 			"flug_percent,hotel_percent,versicherung_percent) values (" +
 			""+kreuzfahrt_percent_default+"" +

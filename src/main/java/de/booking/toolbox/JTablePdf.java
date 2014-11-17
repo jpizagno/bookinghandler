@@ -4,9 +4,6 @@ package de.booking.toolbox;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -38,15 +35,6 @@ public class JTablePdf {
 		// Landscape mode:
 		Document document = new Document(PageSize.LETTER.rotate());
 		
-		/*
-		String[] oneLessColumn = Booking.returnFieldnames().split(":");
-		int num_columns = oneLessColumn.length + 1; // "+1" for total at end of:  kreuzfahrt:flug:hotel:versicherung:day_departure:month_departure:year_departure:surname:first_name:booking_number:booking_date:storno:total"
-		String[] columnTitles = new String[num_columns];
-		for (int col_i=0; col_i<num_columns-1;col_i++){
-			columnTitles[col_i] = oneLessColumn[col_i];
-		}
-		columnTitles[columnTitles.length-1] = "total";
-		*/
 		Booking myBooking = new Booking();
 		Field[] fields = myBooking.getClass().getDeclaredFields();
 		int num_columns = fields.length;
@@ -96,7 +84,6 @@ public class JTablePdf {
 				Field[] fieldsLoop = myBookingtmp.getClass().getDeclaredFields();
 				for (int col_i=0; col_i < fieldsLoop.length; col_i++) {
 					Paragraph myP = new Paragraph();
-					String fieldName = fieldsLoop[col_i].getName();
 					fieldsLoop[col_i].setAccessible(true);
 					Object value;
 					try {

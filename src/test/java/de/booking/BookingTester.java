@@ -2,6 +2,7 @@ package de.booking;
 
 import org.junit.Test;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import de.booking.model.Booking;
 import de.booking.service.BookingService;
@@ -12,6 +13,7 @@ public class BookingTester {
 
 	@Test
 	public void testBooking() {
+		context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Booking myBooking = new Booking();
 		myBooking.setBooking_number("delme");
 		myBooking.setFirst_name("james test");
@@ -20,7 +22,7 @@ public class BookingTester {
 
 		BookingService bookingService = (BookingService) context.getBean("bookingService");
 		bookingService.persistBooking(myBooking);
-		System.out.println("persisted Employee:  id=" + myBooking.getId());		
+		System.out.println("persisted Booking:  id=" + myBooking.getId());		
 		myBooking.setMonth_departure(6);
 		bookingService.updateBooking(myBooking);
 		bookingService.deleteBooking(myBooking);

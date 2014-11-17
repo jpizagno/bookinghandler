@@ -220,6 +220,7 @@ public class Booking {
 			if (myLabel.trim().toLowerCase().equalsIgnoreCase("booking_date")) {
 				successful += 0;
 				String[] ddmmyyyy = enteredText.split("/");
+				@SuppressWarnings("deprecation")
 				Date temp_booking_date = new Date(Integer.valueOf(ddmmyyyy[2]).intValue(),
 						Integer.valueOf(ddmmyyyy[1]).intValue(), 
 						Integer.valueOf(ddmmyyyy[0]).intValue());

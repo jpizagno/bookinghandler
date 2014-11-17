@@ -1,8 +1,5 @@
 package de.booking.dao;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -82,6 +79,7 @@ public class BookingDAOImpl implements BookingDAO {
      * @return  List of Booking objects
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Booking> getBookingsByMonthYear(int month, int year, boolean getStorno) {
 		Session session = sessionFactory.getCurrentSession();  
 		session.beginTransaction();  

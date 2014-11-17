@@ -4,18 +4,14 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import de.booking.dao.BookingDAO;
 import de.booking.graphics.BookingEditor;
 import de.booking.graphics.HistoryBookings;
-import de.booking.model.Booking;
-import de.booking.service.BookingService;
 
 /**
  * This overall package needs Connector/J and itext JAR files to run.
@@ -27,9 +23,14 @@ import de.booking.service.BookingService;
  */
 public class BookingHandler extends JFrame  {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static ConfigurableApplicationContext context;
 	
 	public static void main (String[] args) {
+		
 		BookingHandler myApp = new BookingHandler();
 		myApp.setup();
 		myApp.go();
@@ -37,15 +38,12 @@ public class BookingHandler extends JFrame  {
 	}
 	
     private void go() {
-        // start whole program
-        String myDefaults = null;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         
         // Check to see if Database is up
         // if(DB up get old values and load)
         //myDB = new DatabaseHandler();
-        BookingService bookingService = (BookingService) context.getBean("bookingService");
         
 
 		// Create Swing components

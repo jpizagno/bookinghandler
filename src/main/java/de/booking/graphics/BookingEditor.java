@@ -10,8 +10,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import de.booking.database.DatabaseHandler;
 import de.booking.model.Booking;
@@ -32,9 +31,13 @@ import de.booking.service.BookingService;
 
 public class BookingEditor extends JPanel  {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static ConfigurableApplicationContext context;
 
-	private String newline = "\n";
 	protected static final String textFieldString = "Booking name";
 	protected static final String buttonString = "JButton";
 	//protected JLabel actionLabel;
@@ -49,9 +52,11 @@ public class BookingEditor extends JPanel  {
 	private Button clearFields; // clears text fields
 	private Button unstornoBooking;
 
+	
 	public BookingEditor() {
 		// connect to DB
 		myDB = new DatabaseHandler();
+		context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		if (myDB.isConnected()==false){
 			String st="BookingEditor NOT connected to Database";
 			JOptionPane.showMessageDialog(null,st);
@@ -59,7 +64,6 @@ public class BookingEditor extends JPanel  {
 
 		//Create a regular text fields.
 		List<JTextField> myBookingFieldsList = new ArrayList<JTextField>();
-		//String[] myBookingFieldsNames = Booking.returnFieldnames().split(":");
 
 		Booking myBooking = new Booking();
 		Field[] fields = myBooking.getClass().getDeclaredFields();
