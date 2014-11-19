@@ -72,9 +72,9 @@ public class BookingServiceImpl implements BookingService {
 	@Transactional
 	public List<Booking> getTopNRows(int numRows) {
 		Session session = sessionFactory.getCurrentSession();  
-		String sSQL  = " FROM Booking order by updated_time desc LIMIT 0,";
-		sSQL = sSQL + numRows ;
+		String sSQL  = " FROM Booking order by updated_time desc ";
 		Query queryResult = session.createQuery(sSQL);  
+		queryResult.setMaxResults(numRows);
 		return queryResult.list(); 
 	}
 

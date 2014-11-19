@@ -78,7 +78,7 @@ public class JTablePdf {
 			
 			// add columns
 			// for each item just add cell:
-			List<Booking> bookings = ((BookingTableModel) jTable.getModel()).getCoffeesRowSet() ;
+			List<Booking> bookings = ((BookingTableModel) jTable.getModel()).getInputList() ;
 			for(Booking myBookingtmp : bookings) {
 
 				Field[] fieldsLoop = myBookingtmp.getClass().getDeclaredFields();

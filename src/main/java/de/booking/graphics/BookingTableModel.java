@@ -2,103 +2,100 @@ package de.booking.graphics;
 
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 import de.booking.model.Booking;
 
-public class BookingTableModel extends AbstractTableModel implements TableModel {
+public class BookingTableModel extends AbstractTableModel {
 
-	  /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private List<Booking> li = new ArrayList<Booking>();
+	private String[] columnNames = new String[Booking.class.getClass().getDeclaredFields().length];
+
+	public List<Booking> getInputList(){
+		return li;
+	}
 	
-	private List<Booking> coffeesRowSet; // The ResultSet to interpret
-	  int numcols, numrows; // How many rows and columns in the table
+	public BookingTableModel(List<Booking> list){
+		this.li = list;
+		Booking myBooking = new Booking();
+		Field[] fields = myBooking.getClass().getDeclaredFields();
+		for (int fieldint = 0 ; fieldint<fields.length; fieldint++) {
+			columnNames[fieldint] = fields[fieldint].getName();
+		}
+	}
 
-	  public List<Booking> getCoffeesRowSet() {
-	    return coffeesRowSet;
-	  }
+	@Override
+	public String getColumnName(int columnIndex){
+		return columnNames[columnIndex];
+	}
+  
+	public int getRowCount() {
+		return li.size();
+	}
+        
+	public int getColumnCount() {
+		return columnNames.length; 
+	}
+
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		Booking myBooking = li.get(rowIndex);
+		Field[] fields = myBooking.getClass().getDeclaredFields();
+		if (columnIndex < 16) {
+			return runGetter(fields[columnIndex], myBooking);
+		} else {
+			return null;
+		}
+	}
+	
+	public static Object runGetter(Field field, Booking o)
+	{
+		@SuppressWarnings("rawtypes")
+		Class aClass = o.getClass();
+	    // MZ: Find the correct method
+	    for (Method method : aClass.getMethods())
+	    {
+	        if ((method.getName().startsWith("get")) && (method.getName().length() == (field.getName().length() + 3)))
+	        {
+	            if (method.getName().toLowerCase().endsWith(field.getName().toLowerCase()))
+	            {
+	                // MZ: Method found, run it
+	                try
+	                {
+	                    return method.invoke(o);
+	                }
+	                catch (IllegalAccessException e)
+	                {
+	                	e.printStackTrace();
+	                    //Logger.fatal("Could not determine method: " + method.getName());
+	                }
+	                catch (InvocationTargetException e)
+	                {
+	                	e.printStackTrace();
+	                    //Logger.fatal("Could not determine method: " + method.getName());
+	                }
+
+	            }
+	        }
+	    }
+	    return null;
+	}
 
 
-	  public BookingTableModel(List<Booking> myBookingList) {
-	    coffeesRowSet = myBookingList;
-	    Booking myBooking = new Booking();
-	    numcols = myBooking.getClass().getDeclaredFields().length;
-	    //numcols = coffeesRowSet.size();
-	  }
-	 
+	@Override
+	public Class<?> getColumnClass(int columnIndex){
+		return String.class;
+	}
 
-	  /** Method from interface TableModel; returns the number of columns */
-
-	  public int getColumnCount() {
-	    return numcols;
-	  }
-
-	    /** Method from interface TableModel; returns the number of rows */
-
-	  public int getRowCount() {
-	    return numrows;
-	  }
-
-	  /** Method from interface TableModel; returns the column name at columnIndex
-	   *  based on information from ResultSetMetaData
-	   */
-
-	  public String getColumnName(int column) {
-		 Booking myBooking = new Booking();
-		 return myBooking.getClass().getDeclaredFields()[column].getName();
-	  }
-
-	  /** Method from interface TableModel; returns the most specific superclass for
-	   *  all cell values in the specified column. To keep things simple, all data
-	   *  in the table are converted to String objects; hence, this method returns
-	   *  the String class.
-	   */
-
-	  @SuppressWarnings({  "rawtypes", "unchecked" })
-	  public Class getColumnClass(int column) {
-		  return String.class;
-	  }
-
-	  /** Method from interface TableModel; returns the value for the cell specified
-	   *  by columnIndex and rowIndex. TableModel uses this method to populate
-	   *  itself with data from the row set. SQL starts numbering its rows and
-	   *  columns at 1, but TableModel starts at 0.
-	   */
-	  public Object getValueAt(int rowIndex, int columnIndex) {
-
-		  Field[] fields = this.coffeesRowSet.get(rowIndex).getClass().getDeclaredFields();
-		  return fields[columnIndex];
-	  }
-
-	    /** Method from interface TableModel; returns true if the specified cell
-	     *  is editable. This sample does not allow users to edit any cells from
-	     *  the TableModel (rows are added by another window control). Thus,
-	     *  this method returns false.
-	     */
-
-	  public boolean isCellEditable(int rowIndex, int columnIndex) {
-		  if (columnIndex==10) {
-			  // this is the booking number
-			  return false;
-		  } else {
-			  return true;
-		  }
-	  }
-	  
-	  public Booking getBookingAtRow(int row){
-		  return this.coffeesRowSet.get(row);
-	  }
-
-	  public void addTableModelListener(TableModelListener l) {
-	  }
-
-	  public void removeTableModelListener(TableModelListener l) {
-	  }
-
+	public Booking getBookingAtRow(int selectedRow) {
+		return (Booking) li.get(selectedRow);
+	}
 }

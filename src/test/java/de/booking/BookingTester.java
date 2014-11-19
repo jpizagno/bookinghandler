@@ -1,5 +1,8 @@
 package de.booking;
 
+import java.util.List;
+
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -26,6 +29,20 @@ public class BookingTester {
 		myBooking.setMonth_departure(6);
 		bookingService.updateBooking(myBooking);
 		bookingService.deleteBooking(myBooking);
+	}
+	
+	@Test
+	public void test_readRecentBookings() {
+		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		BookingService bookingService = (BookingService) context.getBean("bookingService");
+		List<Booking> myBookings = bookingService.getTopNRows(20);
+		
+		Assert.assertTrue(myBookings.size() == 20) ;
+		
+		for (Booking myBooking : myBookings) {
+			Assert.assertNotNull(myBooking.getId());
+		}
+		
 	}
 	
 	

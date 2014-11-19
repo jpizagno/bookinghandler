@@ -46,7 +46,7 @@ public class BookingEditor extends JPanel  {
 	private JLabel[] labels;
 	private JTextField[] textFields;
 	private DatabaseHandler myDB = null;
-	private JTable bookingtable = null;
+	private JTable bookingTable = null;
 	private Button deleteBooking;
 	private Button stornoBooking;
 	private Button clearFields; // clears text fields
@@ -158,38 +158,33 @@ public class BookingEditor extends JPanel  {
 								areaScrollPane.getBorder()));
 
 
-		// create the BookingTableModel, enter data, set listeneers          
-		bookingtable = new JTable(); // Displays the table
+		// create the BookingTableModel, enter data, set listeneers  
+		bookingTable = new JTable(); // Displays the table
 
 		// calling this function fills the table with recent columsn
 		setModelinTable();
 
 		this.setLayout(new BorderLayout());
-
-
 		add(textControlsPane,BorderLayout.WEST); //,c1);
-
 		add(areaScrollPane,BorderLayout.CENTER); //,c1);
 
-		JScrollPane myScrollPane = new JScrollPane(bookingtable);
+		JScrollPane myScrollPane = new JScrollPane(bookingTable);
 		myScrollPane.setPreferredSize(new Dimension(800, 200) );
 		add(myScrollPane,BorderLayout.SOUTH);//,c1);
 	}
 
 	private void setModelinTable()  {
-		bookingtable.clearSelection();
+		bookingTable.clearSelection();
 		List<Booking> myBookingList = getRecentBookings();
 		BookingTableModel myBookingTableModel;
 		myBookingTableModel = new BookingTableModel(myBookingList);
-		bookingtable.setModel(myBookingTableModel);
-
+		System.out.println("***********  "+myBookingTableModel.getColumnName(1) );
+		System.out.println("***********  "+myBookingTableModel.getValueAt(1, 1) );
+		bookingTable.setModel(myBookingTableModel);
 	}
 
 	private List<Booking> getRecentBookings() {		
-		BookingService bookingService = (BookingService) context.getBean("bookingService");
-
-		return bookingService.getTopNRows(20);
-
+		return ((BookingService) context.getBean("bookingService")).getTopNRows(20);
 	}
 
 	private void addLabelTextRows(JLabel[] labels, JTextField[] textFields,GridBagLayout gridbag,
@@ -213,14 +208,14 @@ public class BookingEditor extends JPanel  {
 	class unStornoSelectedBookingListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			// get the selected booking and UN storno it.
-			int selectedRow = bookingtable.getSelectedRow();			   
+			int selectedRow = bookingTable.getSelectedRow();			   
 		    
 			if (selectedRow != -1) {
 				//String booking_number = (String) ((BookingTableModel) 
 				//		bookingtable.getModel()).getValueAt(selectedRow, Booking.returnColumnIntGivenName("booking_number"));
 				//myDB.UNstornoBooking(booking_number);
 
-				 Booking bookingUnstorno = ((BookingTableModel) bookingtable.getModel()).getBookingAtRow(selectedRow);
+				 Booking bookingUnstorno = ((BookingTableModel) bookingTable.getModel()).getBookingAtRow(selectedRow);
 				 // storno :  cancel/storno=1  valid=0
 				 bookingUnstorno.setStorno(0);
 				 BookingService bookingService = (BookingService) context.getBean("bookingService");
@@ -239,14 +234,14 @@ public class BookingEditor extends JPanel  {
 	class StornoSelectedBookingListener implements ActionListener {
 		// this class is called by stornoBooking, and cancels/storno selected cruise
 		public void actionPerformed(ActionEvent e) {
-			int selectedRow = bookingtable.getSelectedRow();
+			int selectedRow = bookingTable.getSelectedRow();
 
 			if (selectedRow != -1) {
 				//String booking_number = (String) ((BookingTableModel) 
 				//		bookingtable.getModel()).getValueAt(selectedRow, Booking.returnColumnIntGivenName("booking_number"));
 				//myDB.stornoBooking(booking_number);
 				
-				 Booking bookingUnstorno = ((BookingTableModel) bookingtable.getModel()).getBookingAtRow(selectedRow);
+				 Booking bookingUnstorno = ((BookingTableModel) bookingTable.getModel()).getBookingAtRow(selectedRow);
 				 // storno :  cancel/storno=1  valid=0
 				 bookingUnstorno.setStorno(1);
 				 BookingService bookingService = (BookingService) context.getBean("bookingService");
@@ -264,14 +259,14 @@ public class BookingEditor extends JPanel  {
 	class DeleteSelectedBookingListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			// gets the current booking that is selected and deletes it
-			int selectedRow = bookingtable.getSelectedRow();
+			int selectedRow = bookingTable.getSelectedRow();
 			if (selectedRow != -1) {
 
 				//String booking_number = (String) ((BookingTableModel) 
 				//		bookingtable.getModel()).getValueAt(selectedRow, Booking.returnColumnIntGivenName("booking_number"));
 				//myDB.deleteBooking(booking_number);
 				
-				 Booking bookingUnstorno = ((BookingTableModel) bookingtable.getModel()).getBookingAtRow(selectedRow);
+				 Booking bookingUnstorno = ((BookingTableModel) bookingTable.getModel()).getBookingAtRow(selectedRow);
 				 // storno :  cancel/storno=1  valid=0
 				 BookingService bookingService = (BookingService) context.getBean("bookingService");
 				 bookingService.deleteBooking(bookingUnstorno);
