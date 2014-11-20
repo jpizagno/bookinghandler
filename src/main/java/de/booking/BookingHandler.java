@@ -82,7 +82,6 @@ public class BookingHandler extends JFrame  {
 	}
 
 	public void setup() {
-		System.out.println("load context");
 		context = new ClassPathXmlApplicationContext("applicationContext.xml");
 	}
 	public void shutdown() {

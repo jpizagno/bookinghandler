@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -63,10 +64,23 @@ public class BookingEditor extends JPanel  {
 		}
 
 		//Create a regular text fields.
-		List<JTextField> myBookingFieldsList = new ArrayList<JTextField>();
+		//List<JTextField> myBookingFieldsList = new ArrayList<JTextField>();
 
 		Booking myBooking = new Booking();
 		Field[] fields = myBooking.getClass().getDeclaredFields();
+		
+		// here we want to exclude id(0) and updated_time(15) from being displayed
+		// remove id,comment, updated_time from fields
+		// better to recreate fields without these
+		Field[] fields_tmp = new Field[fields.length - 3];
+		fields_tmp[0] = fields[1];
+		Field[] tmp = Arrays.copyOfRange(fields, 2, 13);
+		for (int i=0;i<tmp.length;i++){
+			fields_tmp[i+1] = tmp[i];
+		}
+		fields_tmp[12] = fields[14];
+		fields = fields_tmp;
+		
 
 		labels = new JLabel[fields.length];
 		textFields = new JTextField[fields.length];
@@ -91,7 +105,7 @@ public class BookingEditor extends JPanel  {
 			labels[fieldint] = textFieldLabel;
 			textFields[fieldint] = textField;
 
-			myBookingFieldsList.add(textField);
+			//myBookingFieldsList.add(textField);
 		}
 		//Lay out the text controls and the labels.
 		JPanel textControlsPane = new JPanel();
@@ -178,8 +192,6 @@ public class BookingEditor extends JPanel  {
 		List<Booking> myBookingList = getRecentBookings();
 		BookingTableModel myBookingTableModel;
 		myBookingTableModel = new BookingTableModel(myBookingList);
-		System.out.println("***********  "+myBookingTableModel.getColumnName(1) );
-		System.out.println("***********  "+myBookingTableModel.getValueAt(1, 1) );
 		bookingTable.setModel(myBookingTableModel);
 	}
 

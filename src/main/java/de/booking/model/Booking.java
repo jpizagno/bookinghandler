@@ -1,5 +1,6 @@
 package de.booking.model;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -199,11 +200,11 @@ public class Booking {
 			}
 			if (myLabel.trim().toLowerCase().equalsIgnoreCase("month_departure")) {
 				successful += 0;
-				setDay_departure(Integer.valueOf(enteredText));
+				setMonth_departure(Integer.valueOf(enteredText));
 			}
 			if (myLabel.trim().toLowerCase().equalsIgnoreCase("year_departure")) {
 				successful += 0;
-				setDay_departure(Integer.valueOf(enteredText));
+				setYear_departure(Integer.valueOf(enteredText));
 			}
 			if (myLabel.trim().toLowerCase().equalsIgnoreCase("surname")) {
 				successful += 0;
@@ -220,11 +221,11 @@ public class Booking {
 			if (myLabel.trim().toLowerCase().equalsIgnoreCase("booking_date")) {
 				successful += 0;
 				String[] ddmmyyyy = enteredText.split("/");
-				@SuppressWarnings("deprecation")
-				Date temp_booking_date = new Date(Integer.valueOf(ddmmyyyy[2]).intValue(),
-						Integer.valueOf(ddmmyyyy[1]).intValue(), 
-						Integer.valueOf(ddmmyyyy[0]).intValue());
-				setBooking_date(temp_booking_date);
+				Calendar cal = Calendar.getInstance();
+				cal.set(Calendar.DAY_OF_MONTH,Integer.valueOf(ddmmyyyy[0]).intValue());
+				cal.set(Calendar.MONTH,Integer.valueOf(ddmmyyyy[1]).intValue()-1);
+				cal.set(Calendar.YEAR,Integer.valueOf(ddmmyyyy[2]).intValue());
+				setBooking_date(cal.getTime());
 			}
 			if (myLabel.trim().toLowerCase().equalsIgnoreCase("storno")) {
 				successful += 0;

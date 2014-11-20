@@ -18,7 +18,8 @@ public class BookingTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private List<Booking> li = new ArrayList<Booking>();
-	private String[] columnNames = new String[Booking.class.getClass().getDeclaredFields().length];
+	private Booking myBooking = new Booking();
+	private String[] columnNames = new String[myBooking.getClass().getDeclaredFields().length];
 
 	public List<Booking> getInputList(){
 		return li;

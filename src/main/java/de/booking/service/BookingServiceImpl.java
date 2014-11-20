@@ -49,7 +49,7 @@ public class BookingServiceImpl implements BookingService {
 	@Transactional
 	public void insertNewBookingCalcTotal(Booking booking2Insert) {
 		// get percentages
-				Percentages currentPercentages = (Percentages) sessionFactory.getCurrentSession().get(Percentages.class, 1);
+				Percentages currentPercentages = (Percentages) sessionFactory.getCurrentSession().get(Percentages.class, Long.valueOf("1"));
 				
 				// get total for this booking:
 				float total = currentPercentages.getKreuzfahrt_percent() * booking2Insert.getKreuzfahrt();
@@ -92,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
 	public List<Booking> getBookingsByMonthYear(int month, int year,
 			boolean getStorno) {
 		Session session = sessionFactory.getCurrentSession();    
-		String sSQL  = " FROM booking as bb " +
+		String sSQL  = " FROM Booking as bb " +
 				" WHERE bb.month_departure="+String.valueOf(month)+"" +
 				" AND bb.year_departure="+String.valueOf(year)+" ";
 		if (getStorno) {

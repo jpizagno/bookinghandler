@@ -64,7 +64,7 @@ public class BookingDAOImpl implements BookingDAO {
 	public List<Booking> getTopNRows(int numRows) { 
 		Session session = sessionFactory.getCurrentSession();  
 		session.beginTransaction();  
-		String sSQL  = " FROM booking order by updated_time desc LIMIT 0,";
+		String sSQL  = " FROM Booking order by updated_time desc LIMIT 0,";
 		sSQL = sSQL + numRows ;
 		Query queryResult = session.createQuery(sSQL);  
 		return queryResult.list(); 

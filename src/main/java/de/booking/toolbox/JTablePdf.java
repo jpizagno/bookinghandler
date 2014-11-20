@@ -4,6 +4,7 @@ package de.booking.toolbox;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -38,8 +39,28 @@ public class JTablePdf {
 		Booking myBooking = new Booking();
 		Field[] fields = myBooking.getClass().getDeclaredFields();
 		int num_columns = fields.length;
+		
+		/*
+		 * We do not want to print the columns:  id(0), comment(13), updated_time(15).
+		 * num_columns = num_columns - 3.
+		 * 
+		 * We want to rewrite "booking_number" as "Transactions-ID".
+		 * 
+		 */
+		num_columns = num_columns - 3;
+		// remove id,comment, updated_time from fields
+		// better to recreate fields without these
+		Field[] fields_tmp = new Field[num_columns];
+		fields_tmp[0] = fields[1];
+		Field[] tmp = Arrays.copyOfRange(fields, 2, 13);
+		for (int i=0;i<tmp.length;i++){
+			fields_tmp[i+1] = tmp[i];
+		}
+		fields_tmp[12] = fields[14];
+		fields = fields_tmp;
+		
 		String[] columnTitles = new String[num_columns];
-		for (int col_i=0; col_i<num_columns-1;col_i++){
+		for (int col_i=0; col_i<num_columns;col_i++){
 			columnTitles[col_i] = fields[col_i].getName();
 		}
 		
@@ -71,7 +92,15 @@ public class JTablePdf {
 			// add column titles:
 			for (int col_i=0; col_i < columnTitles.length; col_i++) {
 				Paragraph myP = new Paragraph();
-				Chunk bar = new Chunk(columnTitles[col_i], myFont ); 
+				Chunk bar ;
+				if (col_i==10) {
+					// need smaller font here
+					Font myFontSmaller = new Font(); // name & point size 
+					myFontSmaller.setSize(5);
+					bar = new Chunk("Transactions-ID", myFontSmaller );
+				} else {
+					bar = new Chunk(columnTitles[col_i], myFont ); 
+				}
 				myP.add( bar ); 
 				table.addCell(myP);
 			}
@@ -81,20 +110,24 @@ public class JTablePdf {
 			List<Booking> bookings = ((BookingTableModel) jTable.getModel()).getInputList() ;
 			for(Booking myBookingtmp : bookings) {
 
-				Field[] fieldsLoop = myBookingtmp.getClass().getDeclaredFields();
-				for (int col_i=0; col_i < fieldsLoop.length; col_i++) {
+				//Field[] fieldsLoop = myBookingtmp.getClass().getDeclaredFields();
+				for (int col_i=0; col_i < fields.length; col_i++) {
 					Paragraph myP = new Paragraph();
-					fieldsLoop[col_i].setAccessible(true);
+					fields[col_i].setAccessible(true);
 					Object value;
-					try {
-						
-						value = fieldsLoop[col_i].get(myBookingtmp);
-						String column_atthis_row = value.toString();
+					try {			
+						value = fields[col_i].get(myBookingtmp);
+						String column_atthis_row = " ";
+						if (value != null) {
+							column_atthis_row = value.toString();
+						}
+						if(col_i==12) {
+							// removes HH:MM:SS from timestamp. 
+							column_atthis_row = column_atthis_row.substring(0, 10);
+						}
 						Chunk bar = new Chunk(column_atthis_row, myFont ); 
 						myP.add( bar ); 
 						table.addCell(myP);
-						
-						
 					} catch (IllegalArgumentException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -104,31 +137,6 @@ public class JTablePdf {
 					}
 				}
 			}
-			
-			/*
-			ResultSet myCachedRowSet = ((BookingTableModel) jTable.getModel()).getCoffeesRowSet();
-			try {
-				myCachedRowSet.beforeFirst();
-				while (myCachedRowSet.next()) {
-					// at this row, get each column:
-					for (int col_i=0; col_i < columnTitles.length; col_i++) {
-						// get each column at this row:
-						ResultSetMetaData rsmd = (ResultSetMetaData)myCachedRowSet.getMetaData();
-						String column_atthis_row = myCachedRowSet.getString(columnTitles[col_i]);
-						Paragraph myP = new Paragraph();
-						if (column_atthis_row==null) {
-							column_atthis_row = "";
-						}
-						Chunk bar = new Chunk(column_atthis_row, myFont ); 
-						myP.add( bar ); 
-						table.addCell(myP);
-					}
-				}
-			} catch (SQLException e) {
-				System.out.println("*** JtablePdf.createPDF2: SQLException myCachedRowSet.next() BOMBING!");
-				e.printStackTrace();
-			}
-			*/
 			
 			// close all:
 			document.add(table);
