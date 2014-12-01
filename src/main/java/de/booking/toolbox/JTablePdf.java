@@ -23,8 +23,6 @@ import com.lowagie.text.Chunk;
 import de.booking.graphics.BookingTableModel;
 import de.booking.model.Booking;
 
-
-
 public class JTablePdf {
 	
 	public static void createPDF2(String fileOutName, JTable jTable, String month_str, String year_str, float total4monthNyear) {
@@ -129,10 +127,8 @@ public class JTablePdf {
 						myP.add( bar ); 
 						table.addCell(myP);
 					} catch (IllegalArgumentException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -143,11 +139,9 @@ public class JTablePdf {
 			document.close();
 			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			System.out.println("*** JtablePdf.createPDF2:  FileNotFoundException");
 			e.printStackTrace();
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
 			System.out.println("*** JtablePdf.createPDF2:  DocumentException");
 			e.printStackTrace();
 		}

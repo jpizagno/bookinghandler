@@ -35,10 +35,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 public class HistoryBookings extends JPanel {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
 	private static ConfigurableApplicationContext context;
@@ -57,7 +54,7 @@ public class HistoryBookings extends JPanel {
 	public HistoryBookings() {
 
 		myDB = new DatabaseHandler();
-		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		context = new ClassPathXmlApplicationContext("classpath*:**/applicationContext.xml");
 
 		// across top:  current percentages
 		PercentagesService percentagesService = (PercentagesService) context.getBean("percentagesService");
@@ -155,11 +152,7 @@ public class HistoryBookings extends JPanel {
 		button2.setLabel("save to file");
 		button2.addActionListener(new SendTable2PDF());
 		month_panel.add(button2);
-		//Button button3 = new Button();
-		//button3.setLabel("ingest CSV file");
-		//button3.addActionListener(new IngestCSVaction());
-		//month_panel.add(button3);
-
+		
 		// add button to cancel/storno selected booking:
 		Button stornoBooking = new Button();
 		stornoBooking.setLabel("Storno Selected Booking");
@@ -241,10 +234,6 @@ public class HistoryBookings extends JPanel {
 			int selectedRow = bookingtable.getSelectedRow();			   
 
 			if (selectedRow != -1) {
-				//String booking_number = (String) ((BookingTableModel) 
-				//		bookingtable.getModel()).getValueAt(selectedRow, Booking.returnColumnIntGivenName("booking_number"));
-				//myDB.UNstornoBooking(booking_number);
-
 				Booking bookingUnstorno = ((BookingTableModel) bookingtable.getModel()).getBookingAtRow(selectedRow);
 				// storno :  cancel/storno=1  valid=0
 				bookingUnstorno.setStorno(0);
@@ -359,10 +348,6 @@ public class HistoryBookings extends JPanel {
 			int selectedRow = bookingtable.getSelectedRow();
 			if (selectedRow != -1) {
 
-				//String booking_number = (String) ((BookingTableModel) 
-				//		bookingtable.getModel()).getValueAt(selectedRow, Booking.returnColumnIntGivenName("booking_number"));
-				//myDB.deleteBooking(booking_number);
-
 				Booking bookingUnstorno = ((BookingTableModel) bookingtable.getModel()).getBookingAtRow(selectedRow);
 				// storno :  cancel/storno=1  valid=0
 				BookingService bookingService = (BookingService) context.getBean("bookingService");
@@ -377,9 +362,14 @@ public class HistoryBookings extends JPanel {
 		}
 	}
 
+	/**
+	 * Given a result set, sum the kreuzfahrt,flug,hotel,versicherung, used to 
+	 * 	give the ehoi result
+	 * 
+	 * @param ehoiMonthYearResults
+	 * @return
+	 */
 	public Float getTotalEHoiMonth(List<Booking> ehoiMonthYearResults){
-		// given a result set, sum the kreuzfahrt,flug,hotel,versicherung
-		// used to give the ehoi result
 		float sum_total = 0;
 		float total_thisbooking = 0;
 
@@ -391,55 +381,22 @@ public class HistoryBookings extends JPanel {
 			sum_total += total_thisbooking;
 		}
 		return sum_total;
-
-		/*
-		try {
-			while (ehoiMonthYearResults.next()) {
-			    total_thisbooking = ehoiMonthYearResults.getFloat("kreuzfahrt");
-			    total_thisbooking = total_thisbooking + ehoiMonthYearResults.getFloat("flug");
-			    total_thisbooking = total_thisbooking + ehoiMonthYearResults.getFloat("hotel");
-			    total_thisbooking = total_thisbooking + ehoiMonthYearResults.getFloat("versicherung");
-			    sum_total += total_thisbooking;
-			}
-		} catch (SQLException e) {
-			System.out.println("HistoryBookings.ehoiMonthYearResults iteration through results of month/year qeuer bombed");
-			e.printStackTrace();
-		}
-		System.out.println("sum_total ehoiMonthYearResults = "+String.valueOf(sum_total));
-		try {
-			ehoiMonthYearResults.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("HistoryBooking getTotalEHoiMonth ehoiMonthYearResults ERROR");
-			e.printStackTrace();
-		}
-		return sum_total;	
-		 */ 
 	}
 
+	/**
+	 * given a result set, sum all of the 'total' column
+	 *  
+	 * @param monthYearResults
+	 * @return
+	 */
 	public float getTotalAllMonths(List<Booking> monthYearResults) {
-		// given a result set, sum all of the 'total' column
 		float sum_total = 0;
 		
 		for (Booking myBooking : monthYearResults) {
 			sum_total += myBooking.getTotal();
 		}
 		return sum_total;
-		/*
-		try {
-			while (monthYearResults.next()) {
-				float total_thisbooking = monthYearResults.getFloat("total");
-				sum_total += total_thisbooking;
-			}
-		} catch (SQLException e) {
-			System.out.println("HistoryBookings.getTotalAllMonths iteration through results of month/year qeuer bombed");
-			e.printStackTrace();
-		}
-		System.out.println("sum_total = "+String.valueOf(sum_total));
-		return sum_total;	 
-		*/
 	}
-
 
 	class TotalButtonListener implements ActionListener {
 		// called when "total" button is clicked.  Should get month/year, query the DB , set result

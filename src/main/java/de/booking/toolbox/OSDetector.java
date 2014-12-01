@@ -5,8 +5,7 @@ public class OSDetector {
     private static boolean isLinux = false;
     private static boolean isMac = false;
 
-    static
-    {
+    static {
         String os = System.getProperty("os.name").toLowerCase();
         isWindows = os.contains("win");
         isLinux = os.contains("nux") || os.contains("nix");

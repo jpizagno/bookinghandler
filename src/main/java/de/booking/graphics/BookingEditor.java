@@ -10,7 +10,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -32,9 +32,6 @@ import de.booking.service.BookingService;
 
 public class BookingEditor extends JPanel  {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static ConfigurableApplicationContext context;
@@ -53,22 +50,20 @@ public class BookingEditor extends JPanel  {
 	private Button clearFields; // clears text fields
 	private Button unstornoBooking;
 
-	
+	@Autowired
+	private BookingService bookingService;
+
 	public BookingEditor() {
 		// connect to DB
 		myDB = new DatabaseHandler();
-		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		context = new ClassPathXmlApplicationContext("classpath*:**/applicationContext.xml");
 		if (myDB.isConnected()==false){
 			String st="BookingEditor NOT connected to Database";
 			JOptionPane.showMessageDialog(null,st);
 		}
-
-		//Create a regular text fields.
-		//List<JTextField> myBookingFieldsList = new ArrayList<JTextField>();
-
 		Booking myBooking = new Booking();
 		Field[] fields = myBooking.getClass().getDeclaredFields();
-		
+
 		// here we want to exclude id(0) and updated_time(15) from being displayed
 		// remove id,comment, updated_time from fields
 		// better to recreate fields without these
@@ -80,7 +75,7 @@ public class BookingEditor extends JPanel  {
 		}
 		fields_tmp[12] = fields[14];
 		fields = fields_tmp;
-		
+
 
 		labels = new JLabel[fields.length];
 		textFields = new JTextField[fields.length];
@@ -187,6 +182,9 @@ public class BookingEditor extends JPanel  {
 		add(myScrollPane,BorderLayout.SOUTH);//,c1);
 	}
 
+	/**
+	 * 
+	 */
 	private void setModelinTable()  {
 		bookingTable.clearSelection();
 		List<Booking> myBookingList = getRecentBookings();
@@ -195,10 +193,22 @@ public class BookingEditor extends JPanel  {
 		bookingTable.setModel(myBookingTableModel);
 	}
 
+	/**
+	 *  Gets most recent (By updated_time DESC) bookings
+	 * @return  List<Booking>
+	 */
 	private List<Booking> getRecentBookings() {		
 		return ((BookingService) context.getBean("bookingService")).getTopNRows(20);
 	}
 
+	/**
+	 * Adds the labels, given textFields, and Swing gridbag and Container
+	 * 
+	 * @param labels
+	 * @param textFields
+	 * @param gridbag
+	 * @param container
+	 */
 	private void addLabelTextRows(JLabel[] labels, JTextField[] textFields,GridBagLayout gridbag,
 			Container container) {
 		GridBagConstraints c = new GridBagConstraints();
@@ -221,25 +231,21 @@ public class BookingEditor extends JPanel  {
 		public void actionPerformed(ActionEvent arg0) {
 			// get the selected booking and UN storno it.
 			int selectedRow = bookingTable.getSelectedRow();			   
-		    
-			if (selectedRow != -1) {
-				//String booking_number = (String) ((BookingTableModel) 
-				//		bookingtable.getModel()).getValueAt(selectedRow, Booking.returnColumnIntGivenName("booking_number"));
-				//myDB.UNstornoBooking(booking_number);
 
-				 Booking bookingUnstorno = ((BookingTableModel) bookingTable.getModel()).getBookingAtRow(selectedRow);
-				 // storno :  cancel/storno=1  valid=0
-				 bookingUnstorno.setStorno(0);
-				 BookingService bookingService = (BookingService) context.getBean("bookingService");
-				 bookingService.updateBooking(bookingUnstorno);
-				
+			if (selectedRow != -1) {
+				Booking bookingUnstorno = ((BookingTableModel) bookingTable.getModel()).getBookingAtRow(selectedRow);
+				// storno :  cancel/storno=1  valid=0
+				bookingUnstorno.setStorno(0);
+				BookingService bookingService = (BookingService) context.getBean("bookingService");
+				bookingService.updateBooking(bookingUnstorno);
+
 				// remake the table
 				setModelinTable();
 			} else {
 				String st="No Booking Selected";
 				JOptionPane.showMessageDialog(null,st);
 			}
-			
+
 		}
 	}
 
@@ -249,15 +255,11 @@ public class BookingEditor extends JPanel  {
 			int selectedRow = bookingTable.getSelectedRow();
 
 			if (selectedRow != -1) {
-				//String booking_number = (String) ((BookingTableModel) 
-				//		bookingtable.getModel()).getValueAt(selectedRow, Booking.returnColumnIntGivenName("booking_number"));
-				//myDB.stornoBooking(booking_number);
-				
-				 Booking bookingUnstorno = ((BookingTableModel) bookingTable.getModel()).getBookingAtRow(selectedRow);
-				 // storno :  cancel/storno=1  valid=0
-				 bookingUnstorno.setStorno(1);
-				 BookingService bookingService = (BookingService) context.getBean("bookingService");
-				 bookingService.updateBooking(bookingUnstorno);
+				Booking bookingUnstorno = ((BookingTableModel) bookingTable.getModel()).getBookingAtRow(selectedRow);
+				// storno :  cancel/storno=1  valid=0
+				bookingUnstorno.setStorno(1);
+				BookingService bookingService = (BookingService) context.getBean("bookingService");
+				bookingService.updateBooking(bookingUnstorno);
 
 				// remake the table
 				setModelinTable();
@@ -273,15 +275,10 @@ public class BookingEditor extends JPanel  {
 			// gets the current booking that is selected and deletes it
 			int selectedRow = bookingTable.getSelectedRow();
 			if (selectedRow != -1) {
-
-				//String booking_number = (String) ((BookingTableModel) 
-				//		bookingtable.getModel()).getValueAt(selectedRow, Booking.returnColumnIntGivenName("booking_number"));
-				//myDB.deleteBooking(booking_number);
-				
-				 Booking bookingUnstorno = ((BookingTableModel) bookingTable.getModel()).getBookingAtRow(selectedRow);
-				 // storno :  cancel/storno=1  valid=0
-				 BookingService bookingService = (BookingService) context.getBean("bookingService");
-				 bookingService.deleteBooking(bookingUnstorno);
+				Booking bookingUnstorno = ((BookingTableModel) bookingTable.getModel()).getBookingAtRow(selectedRow);
+				// storno :  cancel/storno=1  valid=0
+				BookingService bookingService = (BookingService) context.getBean("bookingService");
+				bookingService.deleteBooking(bookingUnstorno);
 
 				// remake the table
 				setModelinTable();
@@ -318,11 +315,8 @@ public class BookingEditor extends JPanel  {
 					//myDB.insertNewBooking(booking2Insert);
 					BookingService bookingService = (BookingService) context.getBean("bookingService");
 					bookingService.insertNewBookingCalcTotal(booking2Insert);
-					
+
 					setModelinTable();
-					//DefaultTableModel tableModel = (DefaultTableModel) bookingtable.getModel();
-					//tableModel.fireTableDataChanged();
-					//bookingtable.updateUI();
 				}
 			}
 		}

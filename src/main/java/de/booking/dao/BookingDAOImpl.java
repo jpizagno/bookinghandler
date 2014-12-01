@@ -17,7 +17,6 @@ public class BookingDAOImpl implements BookingDAO {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-	
 	public void persistBooking(Booking myBooking) {
 		sessionFactory.getCurrentSession().persist(myBooking);
 	}
@@ -25,7 +24,7 @@ public class BookingDAOImpl implements BookingDAO {
 	public Booking findBookingById(long id) {
 		return (Booking) sessionFactory.getCurrentSession().get(Booking.class, id);
 	}
-
+	
 	public void updateBooking(Booking myBooking) {
 		sessionFactory.getCurrentSession().update(myBooking);
 	}

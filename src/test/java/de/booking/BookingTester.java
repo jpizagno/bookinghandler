@@ -42,8 +42,6 @@ public class BookingTester {
 		for (Booking myBooking : myBookings) {
 			Assert.assertNotNull(myBooking.getId());
 		}
-		
 	}
-	
-	
+
 }
