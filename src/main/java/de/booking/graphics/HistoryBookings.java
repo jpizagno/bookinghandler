@@ -32,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
+import java.util.Calendar;
 import java.util.List;
 
 public class HistoryBookings extends JPanel {
@@ -51,8 +52,15 @@ public class HistoryBookings extends JPanel {
 
 	private DatabaseHandler myDB;
 
+	private Integer monthSelected;
+	private Integer yearSelected;
+
 	public HistoryBookings() {
 
+		Calendar cal = Calendar.getInstance();
+		yearSelected = cal.get(Calendar.YEAR);
+		monthSelected = cal.get(Calendar.MONTH); 
+		
 		myDB = new DatabaseHandler();
 		context = new ClassPathXmlApplicationContext("classpath*:**/applicationContext.xml");
 
@@ -196,10 +204,14 @@ public class HistoryBookings extends JPanel {
 		add(myScrollPanetable,BorderLayout.SOUTH);//,c1);
 	}
 
+	/**
+	 * takes the month and year selected, and updates the model
+	 */
 	private void setModelinTable() {
 		bookingtable.clearSelection();
 		BookingService bookingService = (BookingService) context.getBean("bookingService");
-		List<Booking> myBookingList = bookingService.getTopNRows(20);
+		//List<Booking> myBookingList = bookingService.getTopNRows(20);
+		List<Booking> myBookingList = bookingService.getBookingsByMonthYear(monthSelected, yearSelected, false);
 		BookingTableModel myBookingTableModel;
 		myBookingTableModel = new BookingTableModel(myBookingList);
 		bookingtable.setModel(myBookingTableModel);	
@@ -315,8 +327,8 @@ public class HistoryBookings extends JPanel {
 			// get STring try to convert to int
 			monthstr = monthTextField.getText().trim();
 			yearstr = yearTextField.getText().trim();
-			month = Integer.valueOf(monthstr);
-			year = Integer.valueOf(yearstr);
+			monthSelected = Integer.valueOf(monthstr);
+			yearSelected = Integer.valueOf(yearstr);
 		} catch (ClassCastException myException) {
 			String st="could not convert month="+monthstr+" year="+yearstr+" into strings";
 			JOptionPane.showMessageDialog(null,st);
@@ -324,9 +336,9 @@ public class HistoryBookings extends JPanel {
 		}
 		if (myDB.isConnected()) {
 			// get these bookings from the DB by month,year
-			List<Booking> monthYearResults = myDB.getBookingsEhoiByMonthYear(month, year);
+			List<Booking> monthYearResults = myDB.getBookingsEhoiByMonthYear(monthSelected, yearSelected);
 			//getResultSet that is columns: kreuzhaft,flug,hotl,versicherung
-			List<Booking> ehoiMonthYearResults = myDB.getBookingsEhoiByMonthYear(month, year);
+			List<Booking> ehoiMonthYearResults = myDB.getBookingsEhoiByMonthYear(monthSelected, yearSelected);
 			setModelinTable(); //monthYearResults);
 
 
@@ -337,8 +349,7 @@ public class HistoryBookings extends JPanel {
 			String ehoiNewText = "  Current Total = "+String.valueOf(totalEhoiMonth )+" ";
 			myTotalAllBookings.setText(newText);
 			ehoiTotalAllBookings.setText(ehoiNewText);
-			System.out.println(myTotalAllBookings.getText());
-
+			//System.out.println(myTotalAllBookings.getText());
 		}
 	}
 

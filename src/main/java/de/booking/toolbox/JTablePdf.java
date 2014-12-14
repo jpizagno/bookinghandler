@@ -28,6 +28,8 @@ public class JTablePdf {
 	public static void createPDF2(String fileOutName, JTable jTable, String month_str, String year_str, float total4monthNyear) {
 		// writes to formatted columns
 		
+		String path = "/Users/jim/Desktop/";
+		
 		float title_padding = 10.0f;
 		
 		//Document document = new Document();
@@ -63,7 +65,7 @@ public class JTablePdf {
 		}
 		
 		try {
-			PdfWriter.getInstance(document, new FileOutputStream(fileOutName));
+			PdfWriter.getInstance(document, new FileOutputStream(path+fileOutName));
 			document.open();
 			PdfPTable table = new PdfPTable(num_columns);
 			

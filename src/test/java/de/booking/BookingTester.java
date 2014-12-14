@@ -43,5 +43,16 @@ public class BookingTester {
 			Assert.assertNotNull(myBooking.getId());
 		}
 	}
+	
+	@Test
+	public void test_November2014Bookings() {
+		// soll 17 sein .  History test
+		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		BookingService bookingService = (BookingService) context.getBean("bookingService");
+		List<Booking> myBookings = bookingService.getBookingsByMonthYear(11, 2014, false);
+		
+		Assert.assertTrue(myBookings.size() == 27) ;
+		Assert.assertFalse(myBookings.size() == 26) ;
+	}
 
 }
