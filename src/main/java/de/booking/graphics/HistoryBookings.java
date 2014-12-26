@@ -12,7 +12,6 @@ import javax.swing.event.DocumentListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import de.booking.database.DatabaseHandler;
 import de.booking.model.Booking;
 import de.booking.model.Percentages;
 import de.booking.service.BookingService;
@@ -50,8 +49,6 @@ public class HistoryBookings extends JPanel {
 	private Button deleteBooking;
 	private Float totalEhoiMonth;
 
-	private DatabaseHandler myDB;
-
 	private Integer monthSelected;
 	private Integer yearSelected;
 
@@ -61,7 +58,6 @@ public class HistoryBookings extends JPanel {
 		yearSelected = cal.get(Calendar.YEAR);
 		monthSelected = cal.get(Calendar.MONTH); 
 		
-		myDB = new DatabaseHandler();
 		context = new ClassPathXmlApplicationContext("classpath*:**/applicationContext.xml");
 
 		// across top:  current percentages
@@ -217,11 +213,6 @@ public class HistoryBookings extends JPanel {
 		bookingtable.setModel(myBookingTableModel);	
 	}
 
-	@SuppressWarnings("unused")
-	private List<Booking> getContentsofBookingTableByMonthYear(int month, int year) {	
-		return myDB.getBookingsEhoiByMonthYear(month,year);
-	}
-
 	private void addLabelTextRows(JLabel[] keys, JLabel[] values,GridBagLayout gridbag,
 			Container container) {
 		GridBagConstraints c = new GridBagConstraints();
@@ -321,8 +312,6 @@ public class HistoryBookings extends JPanel {
 		// get month/year:
 		String monthstr = "nothing entered ";
 		String yearstr = "nothing entered ";
-		Integer month = 0;
-		Integer year = 0;
 		try {
 			// get STring try to convert to int
 			monthstr = monthTextField.getText().trim();
@@ -334,23 +323,18 @@ public class HistoryBookings extends JPanel {
 			JOptionPane.showMessageDialog(null,st);
 			myException.printStackTrace();
 		}
-		if (myDB.isConnected()) {
-			// get these bookings from the DB by month,year
-			List<Booking> monthYearResults = myDB.getBookingsEhoiByMonthYear(monthSelected, yearSelected);
-			//getResultSet that is columns: kreuzhaft,flug,hotl,versicherung
-			List<Booking> ehoiMonthYearResults = myDB.getBookingsEhoiByMonthYear(monthSelected, yearSelected);
-			setModelinTable(); //monthYearResults);
+		BookingService bookingService = (BookingService) context.getBean("bookingService");
+		List<Booking> ehoiMonthYearResults = bookingService.getBookingsByMonthYear(monthSelected, yearSelected, false);
+		
+		setModelinTable(); //monthYearResults);
 
-
-			// update the total text Field
-			totalAllMonth = getTotalAllMonths(monthYearResults);
-			totalEhoiMonth = getTotalEHoiMonth(ehoiMonthYearResults);
-			String newText = "  Current Total = "+String.valueOf(totalAllMonth)+" ";
-			String ehoiNewText = "  Current Total = "+String.valueOf(totalEhoiMonth )+" ";
-			myTotalAllBookings.setText(newText);
-			ehoiTotalAllBookings.setText(ehoiNewText);
-			//System.out.println(myTotalAllBookings.getText());
-		}
+		// update the total text Field
+		totalAllMonth = getTotalAllMonths(ehoiMonthYearResults);
+		totalEhoiMonth = getTotalEHoiMonth(ehoiMonthYearResults);
+		String newText = "  Current Total = "+String.valueOf(totalAllMonth)+" ";
+		String ehoiNewText = "  Current Total = "+String.valueOf(totalEhoiMonth )+" ";
+		myTotalAllBookings.setText(newText);
+		ehoiTotalAllBookings.setText(ehoiNewText);
 	}
 
 	class DeleteSelectedBookingListener implements ActionListener {

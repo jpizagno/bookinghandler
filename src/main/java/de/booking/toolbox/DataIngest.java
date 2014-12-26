@@ -11,7 +11,6 @@ import java.util.Date;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import de.booking.database.DatabaseHandler;
 import de.booking.model.Booking;
 import de.booking.service.BookingService;
 
@@ -31,9 +30,6 @@ public class DataIngest {
 	@SuppressWarnings("deprecation")
 	public static void IngestCSV(String filename) {
 		context = new ClassPathXmlApplicationContext("classpath*:**/applicationContext.xml");
-
-		// open DB:
-		DatabaseHandler myDB = new DatabaseHandler();
 
 		//try {
 		FileInputStream fstream;
@@ -89,7 +85,5 @@ public class DataIngest {
 			System.out.println("DataInget.IngestCSV() ERROR: strLine = br.readLine()) ");
 			e.printStackTrace();
 		}
-		myDB.disconnect();
 	}
-
 }

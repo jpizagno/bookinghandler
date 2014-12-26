@@ -173,7 +173,6 @@ public class Booking {
 			String enteredText = textFields[i].getText();
 			myLabel = myLabel.replace(":", "");
 			myLabel = myLabel.replace("(dd/mm/yyyy)", "");
-			System.out.println("setAllUserFields myLabel = "+myLabel+" enteredText = "+enteredText);
 			if (myLabel.trim().toLowerCase().equalsIgnoreCase("kreuzfahrt")) {
 				successful += 0;
 				setKreuzfahrt(Float.valueOf(enteredText));

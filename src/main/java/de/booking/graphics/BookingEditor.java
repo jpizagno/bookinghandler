@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import de.booking.database.DatabaseHandler;
 import de.booking.model.Booking;
 import de.booking.service.BookingService;
 
@@ -38,12 +37,10 @@ public class BookingEditor extends JPanel  {
 
 	protected static final String textFieldString = "Booking name";
 	protected static final String buttonString = "JButton";
-	//protected JLabel actionLabel;
 	protected Button bookButton ;
 
 	private JLabel[] labels;
 	private JTextField[] textFields;
-	private DatabaseHandler myDB = null;
 	private JTable bookingTable = null;
 	private Button deleteBooking;
 	private Button stornoBooking;
@@ -55,12 +52,9 @@ public class BookingEditor extends JPanel  {
 
 	public BookingEditor() {
 		// connect to DB
-		myDB = new DatabaseHandler();
 		context = new ClassPathXmlApplicationContext("classpath*:**/applicationContext.xml");
-		if (myDB.isConnected()==false){
-			String st="BookingEditor NOT connected to Database";
-			JOptionPane.showMessageDialog(null,st);
-		}
+		JOptionPane.showMessageDialog(null,"starting Booking Editor");
+
 		Booking myBooking = new Booking();
 		Field[] fields = myBooking.getClass().getDeclaredFields();
 
@@ -311,13 +305,11 @@ public class BookingEditor extends JPanel  {
 			int result = booking2Insert.setAllUserFields(labels,textFields);
 			// send Booking to Database
 			if (result==0){
-				if (myDB.isConnected()) {
-					//myDB.insertNewBooking(booking2Insert);
-					BookingService bookingService = (BookingService) context.getBean("bookingService");
-					bookingService.insertNewBookingCalcTotal(booking2Insert);
+				//myDB.insertNewBooking(booking2Insert);
+				BookingService bookingService = (BookingService) context.getBean("bookingService");
+				bookingService.insertNewBookingCalcTotal(booking2Insert);
 
-					setModelinTable();
-				}
+				setModelinTable();
 			}
 		}
 	}
