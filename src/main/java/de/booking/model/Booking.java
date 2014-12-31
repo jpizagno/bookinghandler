@@ -227,8 +227,13 @@ public class Booking {
 				setBooking_date(cal.getTime());
 			}
 			if (myLabel.trim().toLowerCase().equalsIgnoreCase("storno")) {
+				// no-storno/not-cancelled = 0, use this as default
+				if (enteredText.length()==0) {
+					setStorno(0);
+				} else {
+					setStorno(Integer.valueOf(enteredText));
+				}
 				successful += 0;
-				setStorno(Integer.valueOf(enteredText));
 			}
 		}
 		return successful;
