@@ -49,17 +49,17 @@ public class BookingServiceImpl implements BookingService {
 	@Transactional
 	public void insertNewBookingCalcTotal(Booking booking2Insert) {
 		// get percentages
-				Percentages currentPercentages = (Percentages) sessionFactory.getCurrentSession().get(Percentages.class, Long.valueOf("1"));
-				
-				// get total for this booking:
-				float total = currentPercentages.getKreuzfahrt_percent() * booking2Insert.getKreuzfahrt();
-				total += currentPercentages.getFlug_percent() * booking2Insert.getFlug();
-				total += currentPercentages.getHotel_percent() * booking2Insert.getHotel();
-				total += currentPercentages.getVersicherung_percent() * booking2Insert.getVersicherung() ;
-				
-				booking2Insert.setTotal(total);
-				
-				sessionFactory.getCurrentSession().persist(booking2Insert);
+		Percentages currentPercentages = (Percentages) sessionFactory.getCurrentSession().get(Percentages.class, Long.valueOf("1"));
+
+		// get total for this booking:
+		float total = currentPercentages.getKreuzfahrt_percent() * booking2Insert.getKreuzfahrt();
+		total += currentPercentages.getFlug_percent() * booking2Insert.getFlug();
+		total += currentPercentages.getHotel_percent() * booking2Insert.getHotel();
+		total += currentPercentages.getVersicherung_percent() * booking2Insert.getVersicherung() ;
+
+		booking2Insert.setTotal(total);
+
+		sessionFactory.getCurrentSession().save(booking2Insert);
 	}
 
 	/**

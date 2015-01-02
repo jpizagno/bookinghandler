@@ -13,10 +13,9 @@ import de.booking.graphics.BookingEditor;
 import de.booking.graphics.HistoryBookings;
 
 /**
- * This overall package needs Connector/J and itext JAR files to run.
- * A MySQL database is needed, and hence Connector/J.  
- * See DBBackend/DatabaseHandler to see how MySQL tables and triggers are setup.
- * When running this code, the -classpath needs to point to the connector/J and itextpdf JAR files.
+ * This overall package needs hibernate JAR JAR files to run.
+ * A MySQL database is needed.  
+ * When running this code, the -classpath needs to point to the hibernate JAR files.
  * 
  * 
  */
