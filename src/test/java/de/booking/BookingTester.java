@@ -2,7 +2,14 @@ package de.booking;
 
 import java.util.List;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.AnnotationConfiguration;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -14,10 +21,31 @@ import de.booking.service.BookingService;
 public class BookingTester {
 	
 	private static ConfigurableApplicationContext context;
+	
+	@Before
+	public void cleanDatabase() {
+		// setup the session factory
+		AnnotationConfiguration configuration = new AnnotationConfiguration();
 
+		configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+		configuration.setProperty("hibernate.connection.driver_class","com.mysql.jdbc.Driver");
+		configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/bookings_test");
+		configuration.setProperty("hibernate.connection.password", "root");
+		configuration.setProperty("hibernate.connection.username", "root");
+
+		SessionFactory sessionFactory = configuration.buildSessionFactory();
+		Session session = sessionFactory.openSession();
+
+		Transaction tx = session.beginTransaction();
+		Query queryTruncate = session.createSQLQuery("DELETE FROM booking");
+		queryTruncate.executeUpdate();
+		session.flush();
+		tx.commit();
+	}
+	
 	@Test
 	public void testTotal() {
-		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		context = new ClassPathXmlApplicationContext("applicationContext_junittest.xml");
 		BookingService bookingService = (BookingService) context.getBean("bookingService");
 		
 		// add a booking for 100 Eu
@@ -56,7 +84,7 @@ public class BookingTester {
 	
 	@Test
 	public void testBookingDelete() {
-		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		context = new ClassPathXmlApplicationContext("applicationContext_junittest.xml");
 		Booking myBooking = new Booking();
 		myBooking.setBooking_number("delme");
 		myBooking.setFirst_name("james test");
@@ -71,8 +99,9 @@ public class BookingTester {
 	}
 	
 	@Test
+	@Ignore("only good for production database")
 	public void testReadRecentBookings() {
-		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		context = new ClassPathXmlApplicationContext("applicationContext_junittest.xml");
 		BookingService bookingService = (BookingService) context.getBean("bookingService");
 		List<Booking> myBookings = bookingService.getTopNRows(20);
 		
@@ -84,9 +113,10 @@ public class BookingTester {
 	}
 	
 	@Test
+	@Ignore("only good for production database")
 	public void testNovember2014Bookings() {
 		// soll 17 sein .  History test. this test can fail if data changes.
-		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		context = new ClassPathXmlApplicationContext("applicationContext_junittest.xml");
 		BookingService bookingService = (BookingService) context.getBean("bookingService");
 		List<Booking> myBookings = bookingService.getBookingsByMonthYear(11, 2014, false);
 		
