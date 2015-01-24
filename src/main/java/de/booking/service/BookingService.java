@@ -20,4 +20,11 @@ public interface BookingService {
 	  
 	  List<Booking>  getBookingsByMonthYear(int month, int year, boolean getStorno);
 
+	/**
+	 * gets all the bookings that are storno/cancelled.
+	 * 
+	 * @return List<Booking>
+	 */
+	List<Booking> getBookingsWithStorno();
+
 }

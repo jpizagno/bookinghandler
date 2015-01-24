@@ -43,6 +43,67 @@ public class BookingTester {
 	}
 	
 	@Test
+	public void testBookingInsert() {
+		context = new ClassPathXmlApplicationContext("applicationContext_junittest.xml");
+		Booking myBooking = new Booking();
+		myBooking.setBooking_number("delme");
+		myBooking.setFirst_name("james test");
+		myBooking.setSurname("delme");
+		myBooking.setKreuzfahrt((float) 0.0);
+
+		BookingService bookingService = (BookingService) context.getBean("bookingService");
+		bookingService.insertNewBookingCalcTotal(myBooking);	
+		//myBooking.setMonth_departure(6);
+		//bookingService.updateBooking(myBooking);
+		//bookingService.deleteBooking(myBooking);
+	}
+	
+	@Test
+	public void testBookingDelete() {
+		context = new ClassPathXmlApplicationContext("applicationContext_junittest.xml");
+		Booking myBooking = new Booking();
+		myBooking.setBooking_number("delme");
+		myBooking.setFirst_name("james test");
+		myBooking.setSurname("delme");
+		myBooking.setKreuzfahrt((float) 0.0);
+
+		BookingService bookingService = (BookingService) context.getBean("bookingService");
+		bookingService.insertNewBookingCalcTotal(myBooking);	
+		myBooking.setMonth_departure(6);
+		bookingService.updateBooking(myBooking);
+		bookingService.deleteBooking(myBooking);
+	}
+
+	@Test
+	public void testBookingStorno() {
+		context = new ClassPathXmlApplicationContext("applicationContext_junittest.xml");
+		Booking myBooking = new Booking();
+		myBooking.setBooking_number("delme");
+		myBooking.setFirst_name("james test");
+		myBooking.setSurname("delme");
+		myBooking.setKreuzfahrt((float) 0.0);
+		myBooking.setStorno(0);
+
+		BookingService bookingService = (BookingService) context.getBean("bookingService");
+		bookingService.insertNewBookingCalcTotal(myBooking);	
+		
+		// read bookings with storno = 0
+		BookingService bookingService2 = (BookingService) context.getBean("bookingService");
+		List<Booking> listNoStornoBookings = bookingService2.getBookingsWithStorno();
+		Assert.assertTrue(listNoStornoBookings.size()==0);
+		
+		// update booking, set to stono
+		myBooking.setStorno(1);
+		bookingService.updateBooking(myBooking);
+		
+		// read booknigs with stonro = 1
+		List<Booking> listStornoBookings = bookingService.getBookingsWithStorno();
+		Assert.assertTrue(listStornoBookings.size()==1);
+		
+		bookingService.deleteBooking(myBooking);
+	}
+	
+	@Test
 	public void testTotal() {
 		context = new ClassPathXmlApplicationContext("applicationContext_junittest.xml");
 		BookingService bookingService = (BookingService) context.getBean("bookingService");
@@ -80,22 +141,5 @@ public class BookingTester {
 		bookingService.deleteBooking(myBooking);
 		bookingService.deleteBooking(myBooking2);		
 	}
-	
-	@Test
-	public void testBookingDelete() {
-		context = new ClassPathXmlApplicationContext("applicationContext_junittest.xml");
-		Booking myBooking = new Booking();
-		myBooking.setBooking_number("delme");
-		myBooking.setFirst_name("james test");
-		myBooking.setSurname("delme");
-		myBooking.setKreuzfahrt((float) 0.0);
-
-		BookingService bookingService = (BookingService) context.getBean("bookingService");
-		bookingService.insertNewBookingCalcTotal(myBooking);	
-		myBooking.setMonth_departure(6);
-		bookingService.updateBooking(myBooking);
-		bookingService.deleteBooking(myBooking);
-	}
-
 
 }

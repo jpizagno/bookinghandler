@@ -52,5 +52,6 @@ public interface BookingDAO {
 	 * @return
 	 */
 	List<Booking>  getBookingsByMonthYear(int month, int year, boolean getStorno);
+	
 
 }

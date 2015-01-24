@@ -102,4 +102,19 @@ public class BookingServiceImpl implements BookingService {
 		return queryResult.list();
 	}
 
+	/**
+	 * gets all the bookings that are storno/cancelled.
+	 * 
+	 * @return List<Booking>
+	 */
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<Booking> getBookingsWithStorno() {
+		Session session = sessionFactory.getCurrentSession();    
+		String sSQL  = " FROM Booking as bb " +
+				" WHERE bb.storno=1 ";
+		Query queryResult = session.createQuery(sSQL);  
+		return queryResult.list();
+	}
+
 }
