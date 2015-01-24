@@ -9,7 +9,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -97,31 +96,6 @@ public class BookingTester {
 		bookingService.updateBooking(myBooking);
 		bookingService.deleteBooking(myBooking);
 	}
-	
-	@Test
-	@Ignore("only good for production database")
-	public void testReadRecentBookings() {
-		context = new ClassPathXmlApplicationContext("applicationContext_junittest.xml");
-		BookingService bookingService = (BookingService) context.getBean("bookingService");
-		List<Booking> myBookings = bookingService.getTopNRows(20);
-		
-		Assert.assertTrue(myBookings.size() == 20) ;
-		
-		for (Booking myBooking : myBookings) {
-			Assert.assertNotNull(myBooking.getId());
-		}
-	}
-	
-	@Test
-	@Ignore("only good for production database")
-	public void testNovember2014Bookings() {
-		// soll 17 sein .  History test. this test can fail if data changes.
-		context = new ClassPathXmlApplicationContext("applicationContext_junittest.xml");
-		BookingService bookingService = (BookingService) context.getBean("bookingService");
-		List<Booking> myBookings = bookingService.getBookingsByMonthYear(11, 2014, false);
-		
-		Assert.assertTrue(myBookings.size() == 27) ;
-		Assert.assertFalse(myBookings.size() == 26) ;
-	}
+
 
 }
