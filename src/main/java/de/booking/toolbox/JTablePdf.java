@@ -141,10 +141,8 @@ public class JTablePdf {
 			document.close();
 			
 		} catch (FileNotFoundException e) {
-			System.out.println("*** JtablePdf.createPDF2:  FileNotFoundException");
 			e.printStackTrace();
 		} catch (DocumentException e) {
-			System.out.println("*** JtablePdf.createPDF2:  DocumentException");
 			e.printStackTrace();
 		}
 	}

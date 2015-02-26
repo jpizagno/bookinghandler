@@ -78,11 +78,8 @@ public class DataIngest {
 			//Close the input stream
 			in.close();
 		} catch (FileNotFoundException e) {
-			System.out.println("DataInget.IngestCSV() ERROR:  FileInputStream(filename);");
-			System.out.println("DataInget.IngestCSV() ERROR: filename = "+filename);
 			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("DataInget.IngestCSV() ERROR: strLine = br.readLine()) ");
 			e.printStackTrace();
 		}
 	}

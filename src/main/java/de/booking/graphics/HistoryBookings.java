@@ -76,8 +76,7 @@ public class HistoryBookings extends JPanel {
 			Object value;
 			try {
 				value = field.get(percentages);
-				if (value != null) {
-					System.out.println(field.getName() + "=" + value);      
+				if (value != null) {      
 					columns[i] = new JLabel(field.getName());
 					values[i] = new JLabel(value.toString());
 					i++;
@@ -128,13 +127,10 @@ public class HistoryBookings extends JPanel {
 		myTotalAllBookings.getDocument().addDocumentListener(new DocumentListener() {
 			// this is used to register a litener when the text is updated
 			public void removeUpdate(DocumentEvent e) {
-				System.out.println("remove");
 			}
 			public void insertUpdate(DocumentEvent e) {
-				System.out.println("insert");
 			}
 			public void changedUpdate(DocumentEvent e) {
-				System.out.println("changed");
 			}
 		});
 
