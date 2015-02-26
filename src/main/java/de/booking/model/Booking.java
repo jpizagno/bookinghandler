@@ -173,70 +173,83 @@ public class Booking {
 			String enteredText = textFields[i].getText();
 			myLabel = myLabel.replace(":", "");
 			myLabel = myLabel.replace("(dd/mm/yyyy)", "");
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("kreuzfahrt")) {
-				successful += 0;
+			if (myLabel.trim().equalsIgnoreCase("kreuzfahrt")) {
 				setKreuzfahrt(Float.valueOf(enteredText));
+			} else {
+				successful += 1;
 			}
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("flug")) {
-				successful += 0;
+			if (myLabel.trim().equalsIgnoreCase("flug")) {
 				setFlug(Float.valueOf(enteredText));
+			} else {
+				successful += 1;
 			}
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("hotel")) {
-				successful += 0;
+			if (myLabel.trim().equalsIgnoreCase("hotel")) {
 				setHotel(Float.valueOf(enteredText));
+			} else {
+				successful += 1;
 			}
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("versicherung")) {
-				successful += 0;
+			if (myLabel.trim().equalsIgnoreCase("versicherung")) {
 				setVersicherung(Float.valueOf(enteredText));
+			} else {
+				successful += 1;
 			}
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("versicherung")) {
-				successful += 0;
+			if (myLabel.trim().equalsIgnoreCase("versicherung")) {
 				setVersicherung(Float.valueOf(enteredText));
+			} else {
+				successful += 1;
 			}
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("day_departure")) {
-				successful += 0;
+			if (myLabel.trim().equalsIgnoreCase("day_departure")) {
 				setDay_departure(Integer.valueOf(enteredText));
+			} else {
+				successful += 1;
 			}
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("month_departure")) {
-				successful += 0;
+			if (myLabel.trim().equalsIgnoreCase("month_departure")) {
 				setMonth_departure(Integer.valueOf(enteredText));
+			} else {
+				successful += 1;
 			}
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("year_departure")) {
-				successful += 0;
+			if (myLabel.trim().equalsIgnoreCase("year_departure")) {
 				setYear_departure(Integer.valueOf(enteredText));
+			} else {
+				successful += 1;
 			}
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("surname")) {
-				successful += 0;
+			if (myLabel.trim().equalsIgnoreCase("surname")) {
 				setSurname(enteredText);
+			} else {
+				successful += 1;
 			}
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("first_name")) {
-				successful += 0;
+			if (myLabel.trim().equalsIgnoreCase("first_name")) {
 				setFirst_name(enteredText);
+			} else {
+				successful += 1;
 			}
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("booking_number")) {
-				successful += 0;
+			if (myLabel.trim().equalsIgnoreCase("booking_number")) {
 				setBooking_number(enteredText );
+			} else {
+				successful += 1;
 			}
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("booking_date")) {
-				successful += 0;
+			if (myLabel.trim().equalsIgnoreCase("booking_date")) {
 				String[] ddmmyyyy = enteredText.split("/");
 				Calendar cal = Calendar.getInstance();
 				cal.set(Calendar.DAY_OF_MONTH,Integer.valueOf(ddmmyyyy[0]).intValue());
 				cal.set(Calendar.MONTH,Integer.valueOf(ddmmyyyy[1]).intValue()-1);
 				cal.set(Calendar.YEAR,Integer.valueOf(ddmmyyyy[2]).intValue());
 				setBooking_date(cal.getTime());
+			} else {
+				successful += 1;
 			}
-			if (myLabel.trim().toLowerCase().equalsIgnoreCase("storno")) {
+			if (myLabel.trim().equalsIgnoreCase("storno")) {
 				// no-storno/not-cancelled = 0, use this as default
 				if (enteredText.length()==0) {
 					setStorno(0);
 				} else {
 					setStorno(Integer.valueOf(enteredText));
 				}
-				successful += 0;
+			} else {
+				successful += 1;
 			}
 		}
-		return successful;
+		return successful ;
 	}
 
 
