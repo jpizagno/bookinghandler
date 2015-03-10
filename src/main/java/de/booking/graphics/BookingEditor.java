@@ -2,6 +2,7 @@ package de.booking.graphics;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -107,21 +108,25 @@ public class BookingEditor extends JPanel  {
 		////Create the button to process entered booking
 		bookButton = new Button("book this cruise");
 		bookButton.addActionListener(new FieldsButtonListener());
+		bookButton.setForeground( Color.BLUE );
 
 		// create button to delete 
 		deleteBooking = new Button();
 		deleteBooking.setLabel("Delete Selected Booking");
 		deleteBooking.addActionListener(new DeleteSelectedBookingListener());
+		deleteBooking.setForeground( Color.red );
 
 		// add button to cancel/storno selected booking:
 		stornoBooking = new Button();
 		stornoBooking.setLabel("Storno Selected Booking");
 		stornoBooking.addActionListener(new StornoSelectedBookingListener());
+		stornoBooking.setForeground( Color.red );
 
 		// create a button to clear the fields
 		clearFields = new Button();
 		clearFields.setLabel("clear fields");
 		clearFields.addActionListener(new ClearFieldsListener());
+		clearFields.setForeground( Color.gray );
 
 		// create a button to "UN"storno selected Booking
 		unstornoBooking = new Button();

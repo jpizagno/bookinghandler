@@ -1,5 +1,6 @@
 package de.booking;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
@@ -26,7 +27,7 @@ public class BookingHandler extends JFrame  {
 	private static final long serialVersionUID = 1L;
 	private static ClassPathXmlApplicationContext context;
 
-	public static void main (String[] args) {
+	public static void main (String[] args) {		
 		BookingHandler myApp = new BookingHandler();
 		myApp.setup();
 		myApp.go();
@@ -78,6 +79,7 @@ public class BookingHandler extends JFrame  {
 	}
 
 	public void setup() {
+		this.getContentPane().setBackground( Color.getHSBColor(68, 235, 235) );
 		context = new ClassPathXmlApplicationContext("classpath*:**/applicationContext.xml");
 	}
 	public void shutdown() {

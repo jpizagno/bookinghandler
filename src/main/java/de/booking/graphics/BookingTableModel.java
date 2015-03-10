@@ -13,17 +13,10 @@ import de.booking.model.Booking;
 
 public class BookingTableModel extends AbstractTableModel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private List<Booking> li = new ArrayList<Booking>();
 	private Booking myBooking = new Booking();
 	private String[] columnNames = new String[myBooking.getClass().getDeclaredFields().length];
-
-	public List<Booking> getInputList(){
-		return li;
-	}
 	
 	public BookingTableModel(List<Booking> list){
 		this.li = list;
@@ -38,15 +31,10 @@ public class BookingTableModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex){
 		return columnNames[columnIndex];
 	}
-  
-	public int getRowCount() {
-		return li.size();
-	}
-        
-	public int getColumnCount() {
-		return columnNames.length; 
-	}
 
+	/**
+	 * get the value at rowIndex and columnIndex
+	 */
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Booking myBooking = li.get(rowIndex);
 		Field[] fields = myBooking.getClass().getDeclaredFields();
@@ -57,10 +45,17 @@ public class BookingTableModel extends AbstractTableModel {
 		}
 	}
 	
-	public static Object runGetter(Field field, Booking o)
+	/**
+	 * Uses reflection to call getting method
+	 * 
+	 * @param field that will be get'd:  get{field}
+	 * @param booking Booking object
+	 * @return
+	 */
+	public static Object runGetter(Field field, Booking booking)
 	{
 		@SuppressWarnings("rawtypes")
-		Class aClass = o.getClass();
+		Class aClass = booking.getClass();
 	    // MZ: Find the correct method
 	    for (Method method : aClass.getMethods())
 	    {
@@ -71,7 +66,7 @@ public class BookingTableModel extends AbstractTableModel {
 	                // MZ: Method found, run it
 	                try
 	                {
-	                    return method.invoke(o);
+	                    return method.invoke(booking);
 	                }
 	                catch (IllegalAccessException e)
 	                {
@@ -90,13 +85,39 @@ public class BookingTableModel extends AbstractTableModel {
 	    return null;
 	}
 
-
 	@Override
 	public Class<?> getColumnClass(int columnIndex){
 		return String.class;
 	}
 
+	/**
+	 * get Booking at row selectedRow
+	 * @param selectedRow
+	 * @return
+	 */
 	public Booking getBookingAtRow(int selectedRow) {
 		return (Booking) li.get(selectedRow);
+	}
+	
+	/**
+	 * returns number of rows
+	 */
+	public int getRowCount() {
+		return li.size();
+	}
+        
+	/**
+	 * returns number of column Names
+	 */
+	public int getColumnCount() {
+		return columnNames.length; 
+	}
+	
+	/**
+	 * returns the input list 
+	 * @return
+	 */
+	public List<Booking> getInputList(){
+		return li;
 	}
 }
