@@ -1,5 +1,6 @@
 import numpy
 import random
+import pdb
 
 '''
     Examples
@@ -37,26 +38,21 @@ import random
 
 
 
-Ncolumns = 10
-Nrows = 5
+Ncolumns = 5
+Nrows = 10
 
 
 # random example
-zero_row = numpy.zeros(Ncolumns)
-our_matrix = numpy.matrix( zero_row )
-our_matrix = numpy.delete(our_matrix,zero_row, 0)
-
+our_matrix = numpy.zeros((Nrows,Ncolumns))
 for rowi in range(Nrows):
-    newrow = numpy.array( numpy.zeros(Ncolumns) )
-    for i in range(Ncolumns):
-        newrow[i] = random.random() - 0.5
-    our_matrix = numpy.vstack( [our_matrix , newrow] )
+    for coli in range(Ncolumns):
+        our_matrix[rowi,coli] = random.random() - 0.5
     
 print "our_matrix"
 print our_matrix
 
 
-cov_our_matrix = numpy.cov(our_matrix)
+cov_our_matrix = numpy.cov(our_matrix.T)
 (eigen_values , eigen_vectors) = numpy.linalg.eig(cov_our_matrix)
 print " "
 print "eigen_values.real: "
@@ -69,39 +65,28 @@ print eigen_vectors.real
 print " "
 print "next build a matrix where the values are correlated"
 # fully correlated example
-zero_row = numpy.zeros(Ncolumns)
-our_matrix = numpy.matrix( zero_row )
-our_matrix = numpy.delete(our_matrix,zero_row, 0)
+our_matrix = numpy.zeros((Nrows,Ncolumns))
 
 for rowi in range(Nrows):
     newrow = numpy.array( numpy.zeros(Ncolumns) )
     
     # 0.1x + 0.2x + 0.3x + 0.4x + 0.5x +0.6x + 0.7x + 0.8x + 0.9x + 1.0x
     x= random.random() - 0.5
-    newrow[0] = 0.1*x
-    newrow[1] = 0.2*x
-    newrow[2] = 0.3*x
-    newrow[3] = 0.4*x
-    newrow[4] = 0.5*x
-    newrow[5] = 0.6*x
-    newrow[6] = 0.7*x
-    newrow[7] = 0.8*x
-    newrow[8] = 0.9*x
-    newrow[9] = 1.0*x
-    
-    our_matrix = numpy.vstack( [our_matrix , newrow] )
+    our_matrix[rowi,0] = 0.1*x
+    our_matrix[rowi,1] = 0.2*x
+    our_matrix[rowi,2] = 0.3*x
+    our_matrix[rowi,3] = 0.4*x
+    our_matrix[rowi,4] = 0.5*x
     
 print " our_matrix correlated values:  "
 print our_matrix
 
 
-cov_our_matrix = numpy.cov(our_matrix)
+cov_our_matrix = numpy.cov(our_matrix.T)
 (eigen_values , eigen_vectors) = numpy.linalg.eig(cov_our_matrix)
 print " "
 print " eigen_values.real:  "
 print eigen_values.real
 print " "
-print " eigen_vectorys.real"
+print " eigen_vectors.real"
 print eigen_vectors.real
- 
-
