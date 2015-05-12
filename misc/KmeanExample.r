@@ -1,0 +1,8 @@
+cells <- c(1,1,2,1,1,1.5,0.5,1,4,3,4.5,5,5,4,5.1,4.1)
+rnames <- c("A", "B", "C", "D", "E","F","G","H")
+cnames <- c("X", "Y")
+x <- matrix(cells, nrow=8, ncol=2, byrow=TRUE, dimnames=list(rnames, cnames))
+km <- kmeans(x, 2, 15)
+print(km)   
+plot(x, col = km$cluster)
+points(km$centers, col = 1:2, pch = 8)
