@@ -9,6 +9,7 @@ import operator
 import datetime
 import time
 import random
+from AddedValue import getFractionWomen
 
 def example_run():
     example_run()
@@ -50,6 +51,9 @@ if __name__ == "__main__":
         myCoupon = Coupon(**line)
         coupons_test_dict[myCoupon.COUPON_ID_hash] = myCoupon  
         
+    # get fraction of women for each coupon  key/value = genreName/fraction_women
+    couponFracWomen_dict = getFractionWomen(impressions_detail_list, users_list, coupons_dict)
+        
     userBest10CouponsRecommended_dict = {}  # key/value = userIdHash/list_of_coupon_hashIDs
     for user in users_list:
         user_coupons_train = []
@@ -79,9 +83,15 @@ if __name__ == "__main__":
                 couponRandomKey = random.choice(coupons_test_dict.keys())
                 list_of_coupon_hashIDs.append(coupons_test_dict[couponRandomKey].COUPON_ID_hash)
         else:  
-            for i in range(0,10):
+            while len(list_of_coupon_hashIDs) < 10:
                 coupon = sorted_similarities_dict.pop() # coupon is tuple (coupon_ID_hash,cosine)
-                list_of_coupon_hashIDs.append(coupon[0])
+                fractionWomen = couponFracWomen_dict[coupons_test_dict[coupon[0]].GENRE_NAME]
+                if fractionWomen > 0.6 and user.SEX_ID == 'f':
+                    # certainly a women coupon with women users
+                    list_of_coupon_hashIDs.append(coupon[0])
+                elif fractionWomen < 0.6 and user.SEX_ID == 'm':
+                    # certainly a mean coupon with men users
+                    list_of_coupon_hashIDs.append(coupon[0])
         # add list to user Dict
         userBest10CouponsRecommended_dict[user.USER_ID_hash] = list_of_coupon_hashIDs
         
