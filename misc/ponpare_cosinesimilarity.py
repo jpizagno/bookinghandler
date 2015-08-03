@@ -32,23 +32,25 @@ def printTest():
 
 if __name__ == "__main__":
 
+    path = 'C:/Users/pizagno_j/Ponpare/data/'
+
     impressions_detail_list = []
-    for t, line in enumerate(DictReader(open('/Users/jim/Ponpare/data/coupon_detail_train.csv'), delimiter=',')):
+    for t, line in enumerate(DictReader(open(path+'coupon_detail_train.csv'), delimiter=',')):
         myCouponList = Impression_Detail(**line)
         impressions_detail_list.append(myCouponList)        
     
     coupons_dict = {}
-    for t, line in enumerate(DictReader(open('/Users/jim/Ponpare/data/coupon_list_train.csv'), delimiter=',')):
+    for t, line in enumerate(DictReader(open(path+'coupon_list_train.csv'), delimiter=',')):
         myCoupon = Coupon(**line)
         coupons_dict[myCoupon.COUPON_ID_hash] = myCoupon    
 
     users_list = []
-    for t, line in enumerate(DictReader(open('/Users/jim/Ponpare/data/user_list.csv'), delimiter=',')):
+    for t, line in enumerate(DictReader(open(path+'user_list.csv'), delimiter=',')):
         myUser = User(**line)
         users_list.append(myUser) 
         
     coupons_test_dict = {}
-    for t, line in enumerate(DictReader(open('/Users/jim/Ponpare/data/coupon_list_test.csv'), delimiter=',')):
+    for t, line in enumerate(DictReader(open(path+'coupon_list_test.csv'), delimiter=',')):
         myCoupon = Coupon(**line)
         coupons_test_dict[myCoupon.COUPON_ID_hash] = myCoupon  
         
@@ -114,11 +116,15 @@ if __name__ == "__main__":
                 if len(sorted_similarities_dict) == 0:
                     # rare case, looked at all coupons with cosine>0.5
                     keepLooping = False
+                if coupon[1] < 0.95:
+                    # it seems that too many coupons with bad clicks punish the user.
+                    # so remove any coupons with cosine < 0.8
+                    keepLooping = False
         print "users cosines:  ",usersCosines
         print " "
         # add list to user Dict
         userBest10CouponsRecommended_dict[user.USER_ID_hash] = list_of_coupon_hashIDs
-		
+ 
     # go through users without impressions, get list from another user with same age/sex
     for userNoImpression in userNoImpressions_list:
         for user in users_list:
@@ -128,14 +134,15 @@ if __name__ == "__main__":
                         # found
                         userBest10CouponsRecommended_dict[userNoImpression.USER_ID_hash] = userBest10CouponsRecommended_dict[user.USER_ID_hash]
                         break 
-        
+    
+    
     # open up sample file, get userid, write out list
     ts = time.time()
     st = datetime.datetime.fromtimestamp(ts).strftime('%Y%m%dT%H%M%S')
     filename  = "submission"+str(st)+".csv"
     with open(filename, 'w') as output:
         output.write('%s\n' % str("USER_ID_hash,PURCHASED_COUPONS"))
-        for t, line in enumerate(DictReader(open('/Users/jim/Ponpare/data/sample_submission.csv'), delimiter=',')):
+        for t, line in enumerate(DictReader(open(path+'sample_submission.csv'), delimiter=',')):
             userIDhash = line['USER_ID_hash']
             if userIDhash in userBest10CouponsRecommended_dict.keys():
                 list_of_coupon_hashIDs = userBest10CouponsRecommended_dict[userIDhash]
