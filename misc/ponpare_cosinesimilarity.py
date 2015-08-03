@@ -70,6 +70,7 @@ if __name__ == "__main__":
     
         
     userBest10CouponsRecommended_dict = {}  # key/value = userIdHash/list_of_coupon_hashIDs
+    userNoImpressions_list = []  # list of users
     for user in users_list:
         # get training coupons
         print "fillin user_coupons_train: user.USER_ID_hash = ",user.USER_ID_hash
@@ -91,34 +92,42 @@ if __name__ == "__main__":
         sorted_similarities_dict = sorted(similarities_user_dict.items(), key=operator.itemgetter(1))
         
         list_of_coupon_hashIDs = []
+        usersCosines = ""
         if len(sorted_similarities_dict) == 0:
             # we have a problem. This user is in the users_list/sample_submission but not in the coupon_detail_train.csv
             print "we have a problem. This user is in the users_list/sample_submission but not in the coupon_detail_train.csv"
             print "user.USER_ID_hash = ",user.USER_ID_hash
-            print " ERROR:  picking random coupons."
-            print " "
-            for i in range(0,10):
-                couponRandomKey = random.choice(coupons_test_dict.keys())
-                list_of_coupon_hashIDs.append(coupons_test_dict[couponRandomKey].COUPON_ID_hash)
+            userNoImpressions_list.append(user)
         else:  
             keepLooping = True
             while keepLooping:
                 coupon = sorted_similarities_dict.pop() # coupon is tuple (coupon_ID_hash,cosine)
                 fractionWomen = couponFracWomen_dict[coupons_test_dict[coupon[0]].GENRE_NAME]
-                if fractionWomen > 0.6 and user.SEX_ID == 'f':
-                    # certainly a women coupon with women users
+                if fractionWomen > 0.95 and user.SEX_ID == 'm':
+                    # certainly a women coupon but male user
+                    pass
+                else:
                     list_of_coupon_hashIDs.append(coupon[0])
-                elif fractionWomen < 0.6 and user.SEX_ID == 'm':
-                    # certainly a mean coupon with men users
-                    list_of_coupon_hashIDs.append(coupon[0])
+                    usersCosines += str(coupon[1]) + " "
                 if len(list_of_coupon_hashIDs) == 10:
                     keepLooping = False
                 if len(sorted_similarities_dict) == 0:
                     # rare case, looked at all coupons with cosine>0.5
                     keepLooping = False
-                    
+        print "users cosines:  ",usersCosines
+        print " "
         # add list to user Dict
         userBest10CouponsRecommended_dict[user.USER_ID_hash] = list_of_coupon_hashIDs
+		
+    # go through users without impressions, get list from another user with same age/sex
+    for userNoImpression in userNoImpressions_list:
+        for user in users_list:
+            if user.USER_ID_hash != userNoImpression.USER_ID_hash:
+                if user.SEX_ID == userNoImpression.SEX_ID :
+                    if user.AGE == userNoImpression.AGE :
+                        # found
+                        userBest10CouponsRecommended_dict[userNoImpression.USER_ID_hash] = userBest10CouponsRecommended_dict[user.USER_ID_hash]
+                        break 
         
     # open up sample file, get userid, write out list
     ts = time.time()
