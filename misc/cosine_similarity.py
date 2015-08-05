@@ -19,6 +19,11 @@ def get_cosine_coupon(couponA, couponB):
     denominatorA = 0.0
     denominatorB = 0.0
     
+    #CAPSULE_TEXT
+    denominatorA += 1.0
+    denominatorB += 1.0
+    if couponA.CAPSULE_TEXT == couponB.CAPSULE_TEXT :
+        numerator += 1
     # GENRE_NAME
     denominatorA += 1.0
     denominatorB += 1.0
@@ -32,6 +37,14 @@ def get_cosine_coupon(couponA, couponB):
     denominatorB += float(couponB.PRICE_RATE) * float(couponB.PRICE_RATE)
     denominatorA += float(couponA.PRICE_RATE) * float(couponA.PRICE_RATE)
     numerator += float(couponB.PRICE_RATE) * float(couponA.PRICE_RATE)
+    # change = (CATALOG_PRICE - DISCOUNT_PRICE) / CATALOG_PRICE
+    if int(couponA.CATALOG_PRICE) > 0 and int(couponB.CATALOG_PRICE) > 0:
+        changeA = (float(couponA.CATALOG_PRICE) - float(couponA.DISCOUNT_PRICE)) / float(couponA.CATALOG_PRICE)
+        changeB = (float(couponB.CATALOG_PRICE) - float(couponB.DISCOUNT_PRICE)) / float(couponB.CATALOG_PRICE)
+        denominatorA += changeA * changeA
+        denominatorB += changeB * changeB
+        numerator += changeA * changeB
+    
     # USABLE_DATE_MON
     denominatorB += float(couponB.USABLE_DATE_MON) * float(couponB.USABLE_DATE_MON)
     denominatorA += float(couponA.USABLE_DATE_MON) * float(couponA.USABLE_DATE_MON)
@@ -77,6 +90,11 @@ def get_cosine_coupon(couponA, couponB):
     denominatorB += 1.0
     denominatorA += 1.0
     if couponA.small_area_name == couponB.small_area_name:
+        numerator += 1
+    # large_area_name
+    denominatorB += 1.0
+    denominatorA += 1.0
+    if couponA.large_area_name == couponB.large_area_name:
         numerator += 1
     
     cosine = numerator / (math.sqrt(denominatorA) * math.sqrt(denominatorB))
