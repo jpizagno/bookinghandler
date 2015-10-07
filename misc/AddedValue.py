@@ -2,6 +2,22 @@
 from coupon_model import Coupon
 from coupon_model import User
 from coupon_model import Impression_Detail
+from datetime import datetime as dt
+
+def userWithdrawn(user):
+    """
+        check to see if user has withdrawn BEFORE 2012-06-24
+    """
+    if user.WITHDRAW_DATE == "NA":
+        return False
+    else:
+        cutOff = dt.strptime("2012-06-24", "%Y-%m-%d")
+        userDate = dt.strptime(user.WITHDRAW_DATE.split(" ")[0], "%Y-%m-%d") # ex: '2012-01-09 07:31:5'
+        if userDate <= cutOff:
+            return True
+        else:
+            return False
+
 
 def getFractionWomen(impressions_detail_list, users_list, coupons_dict):
     """

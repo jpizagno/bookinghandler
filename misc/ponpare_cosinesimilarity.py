@@ -10,6 +10,7 @@ import datetime
 import time
 import random
 from AddedValue import getFractionWomen
+from AddedValue import userWithdrawn
 from tools import getNumUserInImpressions
 import numpy
 import pdb
@@ -42,10 +43,10 @@ if __name__ == "__main__":
         users_list.append(myUser) 
 
     train_coupons_user_dict = {}
-    #impressions_detail_list = []
+    impressions_detail_list = []
     for t, line in enumerate(DictReader(open(path+'coupon_detail_train.csv'), delimiter=',')):
         myCouponList = Impression_Detail(**line)
-        #impressions_detail_list.append(myCouponList)  
+        impressions_detail_list.append(myCouponList)  
         # fill train_coupons_user_dict
         USER_ID_hash = line['USER_ID_hash']
         if USER_ID_hash in train_coupons_user_dict.keys():
@@ -65,8 +66,9 @@ if __name__ == "__main__":
         myCoupon = Coupon(**line)
         coupons_test_dict[myCoupon.COUPON_ID_hash] = myCoupon  
         
-    ## get fraction of women for each coupon  key/value = genreName/fraction_women
-    #couponFracWomen_dict = getFractionWomen(impressions_detail_list, users_list, coupons_dict)
+    # get fraction of women for each coupon  key/value = genreName/fraction_women
+    couponFracWomen_dict = getFractionWomen(impressions_detail_list, users_list, coupons_dict)
+    del(impressions_detail_list)
         
     ## get number of times this user has been seen in imporessions:
     #numUserInImpressions_dict = getNumUserInImpressions(impressions_detail_list)
@@ -88,31 +90,37 @@ if __name__ == "__main__":
     for user in users_list:
         print "user ",user.USER_ID_hash
         
-        list_of_coupons = [] 
-        list_of_coupon_hashIDs = []
-        if user.USER_ID_hash not in train_coupons_user_dict.keys():
-            userNoImpressions_list.append(user)
+        if userWithdrawn(user):
+            print "user withdrawn, given empty list.",user.USER_ID_hash
+            userBest10CouponsRecommended_dict[user.USER_ID_hash] = []
         else:
-            train_coupons_id_hash_user_list = train_coupons_user_dict[user.USER_ID_hash] # list of coupons user clicked on
-            for train_coupons_id_hash in train_coupons_id_hash_user_list:
-                coupons_put_back_in = []
-                coupons_dict = similarities_dict_dict[train_coupons_id_hash]
-                for i in range(0,10):
-                    coupon = coupons_dict.pop()
-                    list_of_coupons.append(coupon) # record (hash,cosine)
-                    coupons_put_back_in.append(coupon)
-                # put those coupons back in dictionary
-                for i in range(len(coupons_put_back_in)-1,-1,-1):
-                    coupons_dict.insert(len(coupons_dict), coupons_put_back_in[i])
-                similarities_dict_dict[train_coupons_id_hash] = coupons_dict
-                    
-            # list_of_coupons has test coupons for this user with cosines. sort and pick top ten.
-            list_of_coupons_sorted = sorted(list_of_coupons,  key=operator.itemgetter(1))
-            for i in range(0,10):
-                list_of_coupon_hashIDs.append(list_of_coupons_sorted[i][0])
+            list_of_coupons = [] 
+            list_of_coupon_hashIDs = []
+            if user.USER_ID_hash not in train_coupons_user_dict.keys():
+                userNoImpressions_list.append(user)
+            else:
+                train_coupons_id_hash_user_list = train_coupons_user_dict[user.USER_ID_hash] # list of coupons user clicked on
+                for train_coupons_id_hash in train_coupons_id_hash_user_list:
+                    coupons_put_back_in = []
+                    coupons_dict = similarities_dict_dict[train_coupons_id_hash]
+                    for i in range(0,10):
+                        coupon = coupons_dict.pop()
+                        list_of_coupons.append(coupon) # record (hash,cosine)
+                        coupons_put_back_in.append(coupon)
+                    # put those coupons back in dictionary
+                    for i in range(len(coupons_put_back_in)-1,-1,-1):
+                        coupons_dict.insert(len(coupons_dict), coupons_put_back_in[i])
+                    similarities_dict_dict[train_coupons_id_hash] = coupons_dict
 
-            # add to final 
-            userBest10CouponsRecommended_dict[user.USER_ID_hash] = list_of_coupon_hashIDs
+                # list_of_coupons has test coupons for this user with cosines. sort and pick top ten.
+                list_of_coupons_sorted = sorted(list_of_coupons,  key=operator.itemgetter(1))
+                for i in range(0,10):
+                    #exclude based on cosine similarity < 0.95
+                    if float(list_of_coupons_sorted[i][1]) > 0.90:
+                        list_of_coupon_hashIDs.append(list_of_coupons_sorted[i][0])
+
+                # add to final 
+                userBest10CouponsRecommended_dict[user.USER_ID_hash] = list_of_coupon_hashIDs
 
  
     # go through users without impressions, get list from another user with same age/sex

@@ -1,8 +1,8 @@
 #read in all the input data
-cpdtr <- read.csv("C:/Users/pizagno_j/Ponpare/data/coupon_detail_train.csv")
-cpltr <- read.csv("C:/Users/pizagno_j/Ponpare/data/coupon_list_train.csv")
-cplte <- read.csv("C:/Users/pizagno_j/Ponpare/data/coupon_list_test.csv")
-ulist <- read.csv("C:/Users/pizagno_j/Ponpare/data/user_list.csv")
+cpdtr <- read.csv("/Users/jim/Ponpare/data/coupon_detail_train.csv")
+cpltr <- read.csv("/Users/jim/Ponpare/data/coupon_list_train.csv")
+cplte <- read.csv("/Users/jim/Ponpare/data/coupon_list_test.csv")
+ulist <- read.csv("/Users/jim/Ponpare/data/user_list.csv")
 
 #making of the train set
 train <- merge(cpdtr,cpltr)

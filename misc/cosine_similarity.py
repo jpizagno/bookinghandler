@@ -19,11 +19,11 @@ def get_cosine_coupon(couponA, couponB):
     denominatorA = 0.0
     denominatorB = 0.0
     
-    #CAPSULE_TEXT
-    denominatorA += 1.0
-    denominatorB += 1.0
-    if couponA.CAPSULE_TEXT == couponB.CAPSULE_TEXT :
-        numerator += 1
+    ##CAPSULE_TEXT
+    #denominatorA += 1.0
+    #denominatorB += 1.0
+    #if couponA.CAPSULE_TEXT == couponB.CAPSULE_TEXT :
+    #    numerator += 1
     # GENRE_NAME
     denominatorA += 1.0
     denominatorB += 1.0
@@ -37,65 +37,65 @@ def get_cosine_coupon(couponA, couponB):
     denominatorB += float(couponB.PRICE_RATE) * float(couponB.PRICE_RATE)
     denominatorA += float(couponA.PRICE_RATE) * float(couponA.PRICE_RATE)
     numerator += float(couponB.PRICE_RATE) * float(couponA.PRICE_RATE)
-    # change = (CATALOG_PRICE - DISCOUNT_PRICE) / CATALOG_PRICE
-    if int(couponA.CATALOG_PRICE) > 0 and int(couponB.CATALOG_PRICE) > 0:
-        changeA = (float(couponA.CATALOG_PRICE) - float(couponA.DISCOUNT_PRICE)) / float(couponA.CATALOG_PRICE)
-        changeB = (float(couponB.CATALOG_PRICE) - float(couponB.DISCOUNT_PRICE)) / float(couponB.CATALOG_PRICE)
-        denominatorA += changeA * changeA
-        denominatorB += changeB * changeB
-        numerator += changeA * changeB
+    ## change = (CATALOG_PRICE - DISCOUNT_PRICE) / CATALOG_PRICE
+    #if int(couponA.CATALOG_PRICE) > 0 and int(couponB.CATALOG_PRICE) > 0:
+    #    changeA = (float(couponA.CATALOG_PRICE) - float(couponA.DISCOUNT_PRICE)) / float(couponA.CATALOG_PRICE)
+    #    changeB = (float(couponB.CATALOG_PRICE) - float(couponB.DISCOUNT_PRICE)) / float(couponB.CATALOG_PRICE)
+    #    denominatorA += changeA * changeA
+    #    denominatorB += changeB * changeB
+    #    numerator += changeA * changeB
     
-    # USABLE_DATE_MON
-    denominatorB += float(couponB.USABLE_DATE_MON) * float(couponB.USABLE_DATE_MON)
-    denominatorA += float(couponA.USABLE_DATE_MON) * float(couponA.USABLE_DATE_MON)
-    numerator += float(couponA.USABLE_DATE_MON) * float(couponB.USABLE_DATE_MON)
-     # USABLE_DATE_TUE
-    denominatorB += float(couponB.USABLE_DATE_TUE) * float(couponB.USABLE_DATE_TUE)
-    denominatorA += float(couponA.USABLE_DATE_TUE) * float(couponA.USABLE_DATE_TUE)
-    numerator += float(couponA.USABLE_DATE_TUE) * float(couponB.USABLE_DATE_TUE)
-    # USABLE_DATE_WED
-    denominatorB += float(couponB.USABLE_DATE_WED) * float(couponB.USABLE_DATE_WED)
-    denominatorA += float(couponA.USABLE_DATE_WED) * float(couponA.USABLE_DATE_TUE)
-    numerator += float(couponA.USABLE_DATE_WED) * float(couponB.USABLE_DATE_WED)
-    # USABLE_DATE_THU
-    denominatorB += float(couponB.USABLE_DATE_THU) * float(couponB.USABLE_DATE_THU)
-    denominatorA += float(couponA.USABLE_DATE_THU) * float(couponA.USABLE_DATE_THU)
-    numerator += float(couponA.USABLE_DATE_THU) * float(couponB.USABLE_DATE_THU)
-    # USABLE_DATE_FRI
-    denominatorB += float(couponB.USABLE_DATE_FRI) * float(couponB.USABLE_DATE_FRI)
-    denominatorA += float(couponA.USABLE_DATE_FRI) * float(couponA.USABLE_DATE_FRI)
-    numerator += float(couponA.USABLE_DATE_FRI) * float(couponB.USABLE_DATE_FRI)
+    ## USABLE_DATE_MON
+    #denominatorB += float(couponB.USABLE_DATE_MON) * float(couponB.USABLE_DATE_MON)
+    #denominatorA += float(couponA.USABLE_DATE_MON) * float(couponA.USABLE_DATE_MON)
+    #numerator += float(couponA.USABLE_DATE_MON) * float(couponB.USABLE_DATE_MON)
+    # # USABLE_DATE_TUE
+    #denominatorB += float(couponB.USABLE_DATE_TUE) * float(couponB.USABLE_DATE_TUE)
+    #denominatorA += float(couponA.USABLE_DATE_TUE) * float(couponA.USABLE_DATE_TUE)
+    #numerator += float(couponA.USABLE_DATE_TUE) * float(couponB.USABLE_DATE_TUE)
+    ## USABLE_DATE_WED
+    #denominatorB += float(couponB.USABLE_DATE_WED) * float(couponB.USABLE_DATE_WED)
+    #denominatorA += float(couponA.USABLE_DATE_WED) * float(couponA.USABLE_DATE_TUE)
+    #numerator += float(couponA.USABLE_DATE_WED) * float(couponB.USABLE_DATE_WED)
+    ## USABLE_DATE_THU
+    #denominatorB += float(couponB.USABLE_DATE_THU) * float(couponB.USABLE_DATE_THU)
+    #denominatorA += float(couponA.USABLE_DATE_THU) * float(couponA.USABLE_DATE_THU)
+    #numerator += float(couponA.USABLE_DATE_THU) * float(couponB.USABLE_DATE_THU)
+    ## USABLE_DATE_FRI
+    #denominatorB += float(couponB.USABLE_DATE_FRI) * float(couponB.USABLE_DATE_FRI)
+    #denominatorA += float(couponA.USABLE_DATE_FRI) * float(couponA.USABLE_DATE_FRI)
+    #numerator += float(couponA.USABLE_DATE_FRI) * float(couponB.USABLE_DATE_FRI)
     # USABLE_DATE_SAT
     denominatorB += float(couponB.USABLE_DATE_SAT) * float(couponB.USABLE_DATE_SAT)
     denominatorA += float(couponA.USABLE_DATE_SAT) * float(couponA.USABLE_DATE_SAT)
     numerator += float(couponA.USABLE_DATE_SAT) * float(couponB.USABLE_DATE_SAT)
-    # USABLE_DATE_SUN
-    denominatorB += float(couponB.USABLE_DATE_SUN) * float(couponB.USABLE_DATE_SUN)
-    denominatorA += float(couponA.USABLE_DATE_SUN) * float(couponA.USABLE_DATE_SUN)
-    numerator += float(couponA.USABLE_DATE_SUN) * float(couponB.USABLE_DATE_SUN)
-    # USABLE_DATE_HOLIDAY
-    denominatorB += float(couponB.USABLE_DATE_HOLIDAY) * float(couponB.USABLE_DATE_HOLIDAY)
-    denominatorA += float(couponA.USABLE_DATE_HOLIDAY) * float(couponA.USABLE_DATE_HOLIDAY)
-    numerator += float(couponA.USABLE_DATE_HOLIDAY) * float(couponB.USABLE_DATE_HOLIDAY)
-    # USABLE_DATE_BEFORE_HOLIDAY
-    denominatorB += float(couponB.USABLE_DATE_BEFORE_HOLIDAY) * float(couponB.USABLE_DATE_BEFORE_HOLIDAY)
-    denominatorA += float(couponA.USABLE_DATE_BEFORE_HOLIDAY) * float(couponA.USABLE_DATE_BEFORE_HOLIDAY)
-    numerator += float(couponA.USABLE_DATE_BEFORE_HOLIDAY) * float(couponB.USABLE_DATE_BEFORE_HOLIDAY)
-    # ken_name
-    denominatorB += 1.0
-    denominatorA += 1.0
-    if couponA.ken_name == couponB.ken_name:
-        numerator += 1
-    # small_area_name
-    denominatorB += 1.0
-    denominatorA += 1.0
-    if couponA.small_area_name == couponB.small_area_name:
-        numerator += 1
-    # large_area_name
-    denominatorB += 1.0
-    denominatorA += 1.0
-    if couponA.large_area_name == couponB.large_area_name:
-        numerator += 1
+    ## USABLE_DATE_SUN
+    #denominatorB += float(couponB.USABLE_DATE_SUN) * float(couponB.USABLE_DATE_SUN)
+    #denominatorA += float(couponA.USABLE_DATE_SUN) * float(couponA.USABLE_DATE_SUN)
+    #numerator += float(couponA.USABLE_DATE_SUN) * float(couponB.USABLE_DATE_SUN)
+    ## USABLE_DATE_HOLIDAY
+    #denominatorB += float(couponB.USABLE_DATE_HOLIDAY) * float(couponB.USABLE_DATE_HOLIDAY)
+    #denominatorA += float(couponA.USABLE_DATE_HOLIDAY) * float(couponA.USABLE_DATE_HOLIDAY)
+    #numerator += float(couponA.USABLE_DATE_HOLIDAY) * float(couponB.USABLE_DATE_HOLIDAY)
+    ## USABLE_DATE_BEFORE_HOLIDAY
+    #denominatorB += float(couponB.USABLE_DATE_BEFORE_HOLIDAY) * float(couponB.USABLE_DATE_BEFORE_HOLIDAY)
+    #denominatorA += float(couponA.USABLE_DATE_BEFORE_HOLIDAY) * float(couponA.USABLE_DATE_BEFORE_HOLIDAY)
+    #numerator += float(couponA.USABLE_DATE_BEFORE_HOLIDAY) * float(couponB.USABLE_DATE_BEFORE_HOLIDAY)
+    ## ken_name
+    #denominatorB += 1.0
+    #denominatorA += 1.0
+    #if couponA.ken_name == couponB.ken_name:
+    #    numerator += 1
+    ## small_area_name
+    #denominatorB += 1.0
+    #denominatorA += 1.0
+    #if couponA.small_area_name == couponB.small_area_name:
+    #    numerator += 1
+    ## large_area_name
+    #denominatorB += 1.0
+    #denominatorA += 1.0
+    #if couponA.large_area_name == couponB.large_area_name:
+    #    numerator += 1
     
     cosine = numerator / (math.sqrt(denominatorA) * math.sqrt(denominatorB))
     return cosine
