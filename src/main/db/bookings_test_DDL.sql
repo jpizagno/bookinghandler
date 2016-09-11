@@ -38,6 +38,5 @@ values
 ('0.035','0.015','0.015','0.05')
 ;
 
-#select * from percentages;
 
 commit;
